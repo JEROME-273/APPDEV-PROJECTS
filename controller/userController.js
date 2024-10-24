@@ -10,10 +10,10 @@ exports.getSignupPage = (req, res) => {
 };
 
 exports.postSignup = async (req, res) => {
-    const { fullname, email, password } = req.body;
+    const { fullname, email, password, role } = req.body; 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        await userModel.createUser(fullname, email, hashedPassword);
+        await userModel.createUser(fullname, email, hashedPassword, role);
         res.redirect('/login');
     } catch (error) {
         console.error('Error during signup:', error);
@@ -26,8 +26,12 @@ exports.postLogin = async (req, res) => {
     try {
         const user = await userModel.findUserByEmail(email);
         if (user && await bcrypt.compare(password, user.password)) {
-            req.session.user = user;
-            res.redirect('/welcome');  
+            req.session.user = user; 
+            if (user.role === 'admin') {
+                res.redirect('/admin/dashboard'); 
+            } else {
+                res.redirect('/welcome'); 
+            }
         } else {
             res.send('Invalid credentials');
         }
@@ -42,6 +46,14 @@ exports.getWelcomePage = (req, res) => {
         res.render('welcome', { user: req.session.user }); 
     } else {
         req.session.errorMsg = 'Please log in first.'; 
+        res.redirect('/login'); 
+    }
+};
+
+exports.getAdminDashboard = (req, res) => {
+    if (req.session.user && req.session.user.role === 'admin') {
+        res.render('admin/dashboard');
+    } else {
         res.redirect('/login'); 
     }
 };

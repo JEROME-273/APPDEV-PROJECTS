@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Oct 24, 2024 at 06:13 AM
+-- Generation Time: Oct 24, 2024 at 07:20 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -33,16 +33,18 @@ CREATE TABLE IF NOT EXISTS `users` (
   `fullname` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `role` enum('user','admin') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'user',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fullname`, `email`, `password`) VALUES
-(2, 'carpio john', 'carpio@gmail.com', '$2a$10$M0qssAs5JzHQ/OO7R2R7weZS86MIeblFCkqHld.7YfoPJqKbosjuC');
+INSERT INTO `users` (`id`, `fullname`, `email`, `password`, `role`) VALUES
+(2, 'carpio john', 'carpio@gmail.com', '$2a$10$M0qssAs5JzHQ/OO7R2R7weZS86MIeblFCkqHld.7YfoPJqKbosjuC', 'user'),
+(3, 'John Ray Carpio', 'johnraycarpio1404@gmail.com', '$2a$10$vRN6E1vMr2oWYYCJ.gbLVe/MBwxu03FXViWi3MwobwD2cGHVIOi3y', 'admin');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

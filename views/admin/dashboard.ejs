@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        header {
+            background-color: #068b0d;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            margin: 20px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px 0;
+            background-color: #068b0d;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        h1, h2, h3 {
+            color: #000000;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+        
+    </style>
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault(); 
+            const confirmation = confirm("Are you sure you want to logout?");
+            if (confirmation) {
+                window.location.href = '/logout'; 
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/admin/products">Manage Products</a></li>
+                <li><a href="/admin/users">Manage Users</a></li>
+                <li><a href="/admin/orders">View Orders</a></li>
+                <li><a href="#" onclick="confirmLogout(event)">Logout</a></li> 
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Welcome, Admin!</h2>
+            <p>Use the navigation to manage your application.</p>
+        </section>
+
+        <section>
+            <h3>Statistics</h3>
+            <p>Total Users: <span id="total-users">0</span></p>
+            <p>Total Products: <span id="total-products">0</span></p>
+            <p>Total Orders: <span id="total-orders">0</span></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Company</p>
+    </footer>
+</body>
+</html>

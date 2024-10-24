@@ -61,7 +61,7 @@
 
         .login-btn {
             background-color: white;
-            color: #068b0d ;
+            color: #068b0d;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
@@ -115,13 +115,13 @@
             flex-direction: column;
         }
 
-        input {
+        input, select {
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 16px;
-            width: 100%; /* Makes all input fields equal in width */
+            width: 100%;
         }
 
         .password-field {
@@ -175,20 +175,25 @@
                     <button class="social-btn linkedin">in</button>
                 </div>
                 <div class="divider">OR</div>
-                <form action="/signup" method="POST"> <!-- Updated form action -->
+                <form action="/signup" method="POST">
                     <input type="text" name="fullname" placeholder="Full Name" required>
                     <input type="email" name="email" placeholder="Email" required>
                     <div class="password-field">
                         <input type="password" name="password" placeholder="Password" required>
                         <span class="eye-icon" onclick="togglePassword()">👁</span>
                     </div>
+                    <select name="role" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
                     <button type="submit" class="sign-up-btn">Sign Up</button>
                 </form>
             </div>
             <div class="login-container">
                 <h2>Already Have an Account?</h2>
                 <p>Log in to continue exploring more features!</p>
-                <a href="/login"><button class="login-btn">Log In</button></a> <!-- Added link to login -->
+                <a href="/login"><button class="login-btn">Log In</button></a>
             </div>
         </div>
     </div>
@@ -198,10 +203,10 @@
             const eyeIcon = document.querySelector('.eye-icon');
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                eyeIcon.innerText = '🙈'; // Change icon to indicate password is visible
+                eyeIcon.innerText = '🙈';
             } else {
                 passwordField.type = 'password';
-                eyeIcon.innerText = '👁'; // Change icon to indicate password is hidden
+                eyeIcon.innerText = '👁';
             }
         }
     </script>

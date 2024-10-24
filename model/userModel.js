@@ -1,9 +1,9 @@
 const pool = require('../db');
 
-exports.createUser = async (fullname, email, password) => {
+exports.createUser = async (fullname, email, password, role) => {
     try {
-        const sql = `INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)`;
-        await pool.query(sql, [fullname, email, password]);
+        const sql = `INSERT INTO users (fullname, email, password, role) VALUES (?, ?, ?, ?)`;
+        await pool.query(sql, [fullname, email, password, role]);
     } catch (error) {
         throw error;
     }
