@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #068b0d 0%, #25b807 100%);
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 24px;
+            margin-bottom: 40px;
+            color: #ffffff;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #d35347;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        a:hover {
+            background-color: #d11010;
+        }
+
+        a:active {
+            background-color: #0abb3f;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault();  
+            const userConfirmed = confirm("Are you sure you want to logout?");
+            if (userConfirmed) {
+                window.location.href = event.target.href; 
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <p>You have successfully logged in.</p>
+    <a href="/logout" onclick="confirmLogout(event)">Logout</a>
+</body>
+</html>
