@@ -17,3 +17,13 @@ exports.findUserByEmail = async (email) => {
         throw error;
     }
 };
+
+// Update profile picture
+exports.updateProfilePic = async (userId, profilePic) => {
+    try {
+        const sql = `UPDATE users SET profile_pic = ? WHERE id = ?`;
+        await pool.query(sql, [profilePic, userId]);
+    } catch (error) {
+        throw error;
+    }
+};

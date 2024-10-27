@@ -159,6 +159,13 @@
         .login-header {
             margin-bottom: 15px;
         }
+
+        .error-message {
+            color: red;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +176,11 @@
                     <img src="/images/agri.png" alt="Agri Logo">
                 </div>
                 <h1 class="login-header">Login to Your Account</h1>
+
+                <% if (errorMsg) { %>
+                    <div class="error-message"><%= errorMsg %></div>
+                <% } %>
+
                 <p>Login using social networks</p>
                 <div class="social-login">
                     <button class="social-btn facebook">f</button>
