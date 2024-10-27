@@ -19,7 +19,14 @@ const upload = multer({ storage });
 
 //get aboutus page
 exports.getAboutUsPage = (req, res) => {
-    res.render('aboutus'); 
+    const user = req.session.user || null; 
+    res.render('aboutus', { user });
+};
+
+//get contact page
+exports.loadContactPage = (req, res) => {
+    const user = req.session.user || null; 
+    res.render('contact', { user }); 
 };
 
 //get Login 

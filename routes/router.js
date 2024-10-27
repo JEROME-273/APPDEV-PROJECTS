@@ -4,6 +4,7 @@ const router = express.Router();
 
 // User routes
 router.get('/aboutus', userController.getAboutUsPage);
+router.get('/contact', userController.loadContactPage);
 router.get('/login', userController.getLoginPage); 
 router.post('/login', userController.postLogin);    
 router.get('/signup', userController.getSignupPage); 

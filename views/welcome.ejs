@@ -40,11 +40,21 @@
             color: #2d7b3b;
         }
 
+        .navbar {
+            display: flex;
+        }
+
         .navbar a {
             margin: 0 15px;
             color: #333;
             text-decoration: none;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a i {
+            margin-right: 5px;
         }
 
         .navbar a:hover,
@@ -58,24 +68,49 @@
             position: relative; 
         }
 
-        .icons input {
-            padding: 5px;
-            margin-right: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-right: 15px; 
         }
 
-        .icon {
-            width: 24px;
-            height: 24px;
-            margin: 0 5px;
+        .search-bar input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: -5px;
+        }
+
+        .search-bar button {
+            background-color: #2d7b3b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-        .user-icon::before {
-            content: "\f007"; 
-            font-family: "Font Awesome 5 Free";
-            font-weight: 900;
+        .search-bar button:hover {
+            background-color: #25612c;
+        }
+
+        .user-icon {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .user-icon img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .cart-icon {
+            margin-left: 15px;
+            width: 24px; 
+            height: 24px; 
+            cursor: pointer; 
         }
 
         .cart-icon::before {
@@ -125,7 +160,6 @@
             line-height: 1.6;
         }
 
-       
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -137,6 +171,10 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 150px;
             z-index: 1;
+        }
+
+        .dropdown-menu.show {
+            display: block; 
         }
 
         .dropdown-menu a {
@@ -162,21 +200,30 @@
             <h1>AgriEcommerce</h1>
         </div>
         <nav class="navbar">
-            <a href="/welcome">Home</a>
-            <a href="/shop">Shop</a>
-            <a href="/aboutus">About Us</a>
-            <a href="/news">News</a>
-            <a href="/contact">Contact</a>
+            <a href="/welcome"><i class="fas fa-home"></i>Home</a>
+            <a href="/shop"><i class="fas fa-shopping-cart"></i>Shop</a>
+            <a href="/aboutus"><i class="fas fa-info-circle"></i>About Us</a>
+            <a href="/news"><i class="fas fa-newspaper"></i>News</a>
+            <a href="/contact"><i class="fas fa-envelope"></i>Contact</a>
         </nav>
         <div class="icons">
-            <input type="text" placeholder="Search">
-            <div class="icon user-icon" onclick="toggleDropdown()"></div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-icon" onclick="toggleDropdown(event)">
+                <% if (user && user.profile_pic) { %>
+                    <img src="/uploads/<%= user.profile_pic %>" alt="User Profile">
+                <% } else { %>
+                    <img src="/images/default-profile.png" alt="Default Profile">
+                <% } %>
+            </div>
             <div class="dropdown-menu" id="userDropdown">
                 <a href="/profile">User Profile</a>
                 <a href="/change-password">Change Password</a>
                 <a href="#" onclick="confirmLogout()">Logout</a>
             </div>
-            <a href="/cart" class="icon cart-icon"></a>
+            <a href="/cart" class="cart-icon"></a>
         </div>
     </header>
 
@@ -204,9 +251,10 @@
     </section>
 
     <script>
-        function toggleDropdown() {
+        function toggleDropdown(event) {
+            event.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            dropdown.classList.toggle('show');
         }
 
         function confirmLogout() {
@@ -219,9 +267,7 @@
         window.onclick = function(event) {
             const dropdown = document.getElementById('userDropdown');
             if (!event.target.matches('.user-icon') && !event.target.closest('.dropdown-menu')) {
-                if (dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
-                }
+                dropdown.classList.remove('show');
             }
         }
     </script>
