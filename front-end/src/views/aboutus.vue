@@ -9,7 +9,7 @@
       <nav class="navbar">
         <router-link to="/welcome"><i class="fas fa-home"></i>Home</router-link>
         <router-link to="/shop"><i class="fas fa-shopping-cart"></i>Shop</router-link>
-        <router-link to="/aboutus"><i class="fas fa-info-circle"></i>About Us</router-link>
+        <router-link to="/aboutus" class="nav-link active"><i class="fas fa-info-circle"></i>About Us</router-link>
         <router-link to="/news"><i class="fas fa-newspaper"></i>News</router-link>
         <router-link to="/contact"><i class="fas fa-envelope"></i>Contact</router-link>
       </nav>
@@ -196,11 +196,14 @@ body {
 }
 
 .cart-icon {
-  margin-left: 15px; 
-  width: 24px; 
-  height: 24px; 
-  cursor: pointer; 
+    margin-left: 15px;
+    color: #333; /* Ensure the icon is visible */
+    font-size: 20px; /* Adjust size if necessary */
+    text-decoration: none;
+    display: flex;
+    align-items: center; 
 }
+
 
 .cart-icon::before {
   content: "\f07a"; 

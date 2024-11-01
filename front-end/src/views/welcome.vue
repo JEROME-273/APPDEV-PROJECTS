@@ -7,7 +7,7 @@
                 <h1>AgriEcommerce</h1>
             </div>
             <nav class="navbar">
-                <router-link to="/welcome"><i class="fas fa-home"></i>Home</router-link>
+                <router-link to="/welcome" class="nav-link active"><i class="fas fa-home"></i>Home</router-link>
                 <router-link to="/shop"><i class="fas fa-shopping-cart"></i>Shop</router-link>
                 <router-link to="/aboutus"><i class="fas fa-info-circle"></i>About Us</router-link>
                 <router-link to="/news"><i class="fas fa-newspaper"></i>News</router-link>
@@ -22,7 +22,7 @@
                     <img :src="user.profile_pic ? '/uploads/' + user.profile_pic : defaultProfilePic" alt="User Profile" />
                 </div>
                 <div class="dropdown-menu" :class="{ show: dropdownVisible }">
-                    <router-link to="/profile">User Profile</router-link>
+                    <router-link to="/userProfile">User Profile</router-link>
                     <router-link to="/change-password">Change Password</router-link>
                     <a href="#" @click.prevent="confirmLogout">Logout</a>
                 </div>
@@ -200,10 +200,13 @@ body {
 
 .cart-icon {
     margin-left: 15px;
-    width: 24px; 
-    height: 24px; 
-    cursor: pointer; 
+    color: #333; /* Ensure the icon is visible */
+    font-size: 20px; /* Adjust size if necessary */
+    text-decoration: none;
+    display: flex;
+    align-items: center; 
 }
+
 
 .cart-icon::before {
     content: "\f07a"; 

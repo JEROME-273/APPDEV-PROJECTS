@@ -3,16 +3,16 @@
       <!-- Header Section -->
       <header class="header">
         <div class="logo">
-          <img src="/images/agri_logo.jpeg" alt="AgriEcommerce Logo" />
+          <img src="@/assets/images/agri_logo.jpeg" alt="AgriEcommerce Logo" />
           <h1>AgriEcommerce</h1>
         </div>
         <nav class="navbar">
-          <router-link to="/welcome">Home</router-link>
-          <router-link to="/shop">Shop</router-link>
-          <router-link to="/aboutus">About Us</router-link>
-          <router-link to="/news">News</router-link>
-          <router-link to="/contact">Contact</router-link>
-        </nav>
+                <router-link to="/welcome" class="nav-link"><i class="fas fa-home"></i>Home</router-link>
+                <router-link to="/shop"><i class="fas fa-shopping-cart"></i>Shop</router-link>
+                <router-link to="/aboutus"><i class="fas fa-info-circle"></i>About Us</router-link>
+                <router-link to="/news"><i class="fas fa-newspaper"></i>News</router-link>
+                <router-link to="/contact"><i class="fas fa-envelope"></i>Contact</router-link>
+            </nav>
       </header>
   
       <!-- Profile Container -->
