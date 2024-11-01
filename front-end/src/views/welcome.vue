@@ -3,7 +3,7 @@
         <!-- Header Section -->
         <header class="header">
             <div class="logo">
-                <img src="/images/agri_logo.jpeg" alt="AgriEcommerce Logo" />
+                <img :src="logo" alt="AgriEcommerce Logo" />
                 <h1>AgriEcommerce</h1>
             </div>
             <nav class="navbar">
@@ -21,7 +21,7 @@
                 <div class="user-icon" @click="toggleDropdown">
                     <img :src="user.profile_pic ? '/uploads/' + user.profile_pic : defaultProfilePic" alt="User Profile" />
                 </div>
-                <div class="dropdown-menu" v-if="dropdownVisible">
+                <div class="dropdown-menu" :class="{ show: dropdownVisible }">
                     <router-link to="/profile">User Profile</router-link>
                     <router-link to="/change-password">Change Password</router-link>
                     <a href="#" @click.prevent="confirmLogout">Logout</a>
@@ -59,10 +59,10 @@
 export default {
     data() {
         return {
-            logo: '/images/agri_logo.jpeg',
-            defaultProfilePic: '/images/default-profile.png',
-            aboutImage1: '/images/agriculture.jpg',
-            aboutImage2: '/images/ag.jpg',
+            logo: require('@/assets/images/agri_logo.jpeg'),
+            defaultProfilePic: require('@/assets/images/default-profile.png'),
+            aboutImage1: require('@/assets/images/agriculture.jpg'),
+            aboutImage2: require('@/assets/images/ag.jpg'),
             user: {
                 profile_pic: null // Replace with actual user data
             },
@@ -72,6 +72,7 @@ export default {
     methods: {
         toggleDropdown() {
             this.dropdownVisible = !this.dropdownVisible;
+            console.log('Dropdown toggled:', this.dropdownVisible);
         },
         confirmLogout() {
             const confirmation = confirm("Are you sure you want to log out?");
@@ -81,12 +82,10 @@ export default {
         },
         handleClickOutside(event) {
             const dropdown = this.$el.querySelector('.dropdown-menu');
-            console.log(dropdown); // Log the dropdown to see if it's null
             if (dropdown && !event.target.closest('.user-icon') && !dropdown.contains(event.target)) {
                 this.dropdownVisible = false;
             }
         }
-
     },
     mounted() {
         window.addEventListener('click', this.handleClickOutside);
@@ -215,7 +214,7 @@ body {
 .hero {
     width: 100%;
     height: 400px;
-    /* background: url('/images/vegetable.jpg') center/cover no-repeat; */
+    background: url('@/assets/images/vegetable.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -254,7 +253,7 @@ body {
 }
 
 .dropdown-menu {
-    display: none;
+    display: none; /* Default hidden */
     position: absolute;
     top: 35px;
     right: 0;
@@ -267,7 +266,7 @@ body {
 }
 
 .dropdown-menu.show {
-    display: block; 
+    display: block; /* Show when class is added */
 }
 
 .dropdown-menu a {
