@@ -3,7 +3,7 @@
         <!-- Header Section -->
         <header class="header">
             <div class="logo">
-                <img :src="logo" alt="AgriEcommerce Logo" />
+                <img src="/images/agri_logo.jpeg" alt="AgriEcommerce Logo" />
                 <h1>AgriEcommerce</h1>
             </div>
             <nav class="navbar">
@@ -81,10 +81,12 @@ export default {
         },
         handleClickOutside(event) {
             const dropdown = this.$el.querySelector('.dropdown-menu');
-            if (!event.target.closest('.user-icon') && !dropdown.contains(event.target)) {
+            console.log(dropdown); // Log the dropdown to see if it's null
+            if (dropdown && !event.target.closest('.user-icon') && !dropdown.contains(event.target)) {
                 this.dropdownVisible = false;
             }
         }
+
     },
     mounted() {
         window.addEventListener('click', this.handleClickOutside);
@@ -213,7 +215,7 @@ body {
 .hero {
     width: 100%;
     height: 400px;
-    background: url('/images/vegetable.jpg') center/cover no-repeat;
+    /* background: url('/images/vegetable.jpg') center/cover no-repeat; */
     display: flex;
     align-items: center;
     justify-content: center;

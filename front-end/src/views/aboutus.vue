@@ -212,7 +212,7 @@
   .hero {
     width: 100%;
     height: 500px;
-    background: url('/images/about.jpg') center/cover no-repeat;
+    /* background: url('/images/about.jpg') center/cover no-repeat; */
     display: flex;
     align-items: center;
     justify-content: center;

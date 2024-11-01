@@ -1,15 +1,12 @@
+<!-- src/App.vue -->
 <template>
   <div id="app">
-      <HelloWorld /> <!-- Include your new component here -->
+    <router-view /> <!-- This will render the current route component -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/home.vue';
-
 export default {
-  components: {
-      HelloWorld
-  }
+  name: 'App'
 };
 </script>
