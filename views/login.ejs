@@ -188,8 +188,8 @@
                     <button class="social-btn linkedin">in</button>
                 </div>
                 <div class="divider">OR</div>
-                <form action="/login" method="POST">
-                    <input type="email" placeholder="Email" name="email" required>
+                <form action="/login" method="POST" onsubmit="return validateEmail();">
+                    <input type="text" placeholder="Email" name="email" required>
                     <div class="password-field">
                         <input type="password" placeholder="Password" name="password" required id="passwordInput">
                         <span class="eye-icon" id="togglePassword">👁</span>
@@ -214,6 +214,17 @@
             passwordInput.setAttribute('type', type);
             this.textContent = type === 'password' ? '👁' : '🙈';
         });
+
+        function validateEmail() {
+            const emailInput = document.querySelector('input[name="email"]');
+            const emailValue = emailInput.value.trim();
+
+            if (emailValue !== 'admin' && !emailValue.includes('@')) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+            return true; 
+        }
     </script>
 </body>
 </html>

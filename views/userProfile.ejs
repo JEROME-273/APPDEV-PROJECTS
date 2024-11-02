@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile - AgriEcommerce</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -40,11 +41,21 @@
             color: #2d7b3b;
         }
 
+        .navbar {
+            display: flex;
+        }
+
         .navbar a {
             margin: 0 15px;
             color: #333;
             text-decoration: none;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a i {
+            margin-right: 5px;
         }
 
         .navbar a:hover,
@@ -141,11 +152,11 @@
             <h1>AgriEcommerce</h1>
         </div>
         <nav class="navbar">
-            <a href="/welcome">Home</a>
-            <a href="/shop">Shop</a>
-            <a href="/aboutus">About Us</a>
-            <a href="/news">News</a>
-            <a href="/contact">Contact</a>
+            <a href="/welcome"><i class="fas fa-home"></i> Home</a>
+            <a href="/shop"><i class="fas fa-shopping-cart"></i> Shop</a>
+            <a href="/aboutus"><i class="fas fa-info-circle"></i> About Us</a>
+            <a href="/news"><i class="fas fa-newspaper"></i> News</a>
+            <a href="/contact"><i class="fas fa-envelope"></i> Contact</a>
         </nav>
     </header>
 
