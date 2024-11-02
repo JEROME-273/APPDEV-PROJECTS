@@ -25,6 +25,18 @@ const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false
+}));
+
+
+//enable CORS for request from vue  front-end
+app.use(cors({
+    origin: 'http://localhost:8081',
+    credentials: true,
+}));
 
 // use of routes
 app.use('/api', routes);

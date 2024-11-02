@@ -77,7 +77,7 @@ export default {
         confirmLogout() {
             const confirmation = confirm("Are you sure you want to log out?");
             if (confirmation) {
-                window.location.href = '/logout';
+                window.location.href = '/login';
             }
         },
         handleClickOutside(event) {

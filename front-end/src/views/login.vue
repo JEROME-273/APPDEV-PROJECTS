@@ -4,7 +4,7 @@
         <!-- Login Form -->
         <div class="login-form">
           <div class="logo">
-            <img src="/images/agri_logo.jpeg" alt="Agri Logo" />
+            <img src="@/assets/images/agri_logo.jpeg" alt="Agri Logo" />
           </div>
           <h1 class="login-header">Login to Your Account</h1>
   
@@ -47,6 +47,7 @@
   </template>
   
   <script>
+  import axios from 'axios';
   export default {
     data() {
       return {
@@ -57,21 +58,35 @@
       };
     },
     methods: {
-      togglePassword() {
-        this.showPassword = !this.showPassword;
-      },
-      handleLogin() {
-        // Replace with your actual login logic
+    togglePassword() {
+      this.showPassword = !this.showPassword;
+    },
+    async handleLogin() {
+      try {
         if (!this.email || !this.password) {
           this.errorMsg = 'Please fill in all fields';
-        } else {
-          this.errorMsg = null;
-          // Perform login, e.g., make an API request here
-          console.log('Email:', this.email, 'Password:', this.password);
+          return;
         }
-      },
-    },
-  };
+
+        // Make the API call to the backend at port 8080
+        const response = await axios.post('http://localhost:8080//api/login', {
+          email: this.email,
+          password: this.password,
+        }, { withCredentials: true }); // Enable cookies/sessions if needed
+
+        if (response.data.redirectUrl) {
+          window.location.href = response.data.redirectUrl;
+        } else {
+          this.errorMsg = response.data.errorMsg || 'Login failed. Please try again.';
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        this.errorMsg = 'An error occurred during login. Please try again later.';
+      }
+    }
+  }
+
+};
   </script>
   
   <style scoped>

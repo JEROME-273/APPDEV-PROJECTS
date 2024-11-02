@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const userModel = require('../model/mainModel');
 const multer = require('multer');
 const path = require('path');
-//const database = require('../config/database');
+const database = require('../config/database');
 
 //handle file uploads
 const storage = multer.diskStorage({
@@ -62,40 +62,34 @@ exports.postLogin = async (req, res) => {
     const { email, password } = req.body;
 
     if (email !== 'admin' && !email.includes('@')) {
-        req.session.errorMsg = 'Invalid email format. Please try again.';
-        return res.redirect('/login');
+        return res.json({ errorMsg: 'Invalid email format. Please try again.' });
     }
 
     try {
         if (email === 'admin' && password === 'admin') {
-            const adminUser = {
+            req.session.user = {
                 id: 1, 
                 fullname: 'Admin',
                 email: 'admin',
                 role: 'admin',
             };
-            req.session.user = adminUser; 
-            return res.redirect('/admin/dashboard');
+            return res.json({ redirectUrl: '/admin/dashboard' });
         }
 
         const user = await userModel.findUserByEmail(email);
         if (user && await bcrypt.compare(password, user.password)) {
             req.session.user = user;
-            if (user.role === 'admin') {
-                res.redirect('/admin/dashboard');
-            } else {
-                res.redirect('/welcome');
-            }
+            const redirectUrl = user.role === 'admin' ? '/admin/dashboard' : '/welcome';
+            res.json({ redirectUrl });
         } else {
-            req.session.errorMsg = 'Invalid credentials. Please try again.';
-            res.redirect('/login');
+            res.json({ errorMsg: 'Invalid credentials. Please try again.' });
         }
     } catch (error) {
         console.error('Error during login:', error);
-        req.session.errorMsg = 'An error occurred during login. Please try again later.';
-        res.redirect('/login');
+        res.json({ errorMsg: 'An error occurred during login. Please try again later.' });
     }
 };
+
 
 
 //get welcome oage
