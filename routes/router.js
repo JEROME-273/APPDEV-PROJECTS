@@ -1,6 +1,18 @@
 const express = require('express');
+const multer = require('multer');
 const userController = require('../controller/mainController'); 
+const adminController = require('../controller/adminController'); 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname); 
+  }
+});
+const upload = multer({ storage: storage });
 
 // User routes
 router.get('/aboutus', userController.getAboutUsPage);
@@ -14,5 +26,10 @@ router.get('/logout', userController.logout);
 router.get('/admin/dashboard', userController.getAdminDashboard);
 router.get('/profile', userController.getUserProfile);
 router.post('/profile', userController.handleProfilePicUpload, userController.uploadProfilePic);
+
+// Admin product routes
+router.get('/admin/products', adminController.getProducts);           
+router.get('/admin/add-product', adminController.getAddProductPage);  
+router.post('/admin/add-product', upload.single('product_image'), adminController.postAddProduct); 
 
 module.exports = router;
