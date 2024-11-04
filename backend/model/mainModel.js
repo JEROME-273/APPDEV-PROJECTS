@@ -9,6 +9,8 @@ exports.createUser = async (fullname, email, password, role) => {
     }
 };
 
+//ggggggg
+
 exports.findUserByEmail = async (email) => {
     try {
         const [rows] = await pool.query(`SELECT * FROM users WHERE email = ?`, [email]);
