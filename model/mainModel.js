@@ -1,4 +1,5 @@
-const pool = require('../db');
+// mainModel.js
+const pool = require('../config/db');
 
 exports.createUser = async (fullname, email, password, role) => {
     try {
@@ -13,6 +14,16 @@ exports.findUserByEmail = async (email) => {
     try {
         const [rows] = await pool.query(`SELECT * FROM users WHERE email = ?`, [email]);
         return rows[0];
+    } catch (error) {
+        throw error;
+    }
+};
+
+// Add this function
+exports.getUserById = async (userId) => {
+    try {
+        const [rows] = await pool.query(`SELECT * FROM users WHERE id = ?`, [userId]);
+        return rows[0]; // Assuming you're interested in the first user found
     } catch (error) {
         throw error;
     }

@@ -1,4 +1,4 @@
-const db = require('../db'); 
+const db = require('../config/db'); 
 
 //get product page
 exports.getProducts = async (req, res) => {
@@ -25,27 +25,28 @@ exports.getAddProductPage = (req, res) => {
   //add product to db
   exports.postAddProduct = async (req, res) => {
     const { product_name, price, quantity } = req.body;
-    const product_image = req.file ? req.file.path : null;  
-  
+    const product_image = req.file ? req.file.path.replace(/\\/g, '/') : null;  
+
     const errors = [];
     if (!product_name) errors.push('Product name is required.');
     if (!price) errors.push('Price is required.');
     if (!quantity) errors.push('Quantity is required.');
-  
+
     if (errors.length > 0) {
-      return res.redirect(`/admin/add-product?errors=${encodeURIComponent(errors.join(','))}`);
+        return res.redirect(`/admin/add-product?errors=${encodeURIComponent(errors.join(','))}`);
     }
-  
+
     try {
-      await db.query(
-        'INSERT INTO products (product_name, price, quantity, product_image) VALUES (?, ?, ?, ?)',
-        [product_name, price, quantity, product_image]
-      );
-      res.redirect('/admin/products?success=Product added successfully.');
+        await db.query(
+            'INSERT INTO products (product_name, price, quantity, product_image) VALUES (?, ?, ?, ?)',
+            [product_name, price, quantity, product_image]
+        );
+        res.redirect('/admin/products?success=Product added successfully.');
     } catch (error) {
-      console.error('Error adding product:', error);
-      res.status(500).send('Error adding product');
+        console.error('Error adding product:', error);
+        res.status(500).send('Error adding product');
     }
-  };
+};
+
   
   

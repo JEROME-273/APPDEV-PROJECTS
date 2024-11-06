@@ -2,47 +2,33 @@ const bcrypt = require('bcryptjs');
 const userModel = require('../model/mainModel');
 const multer = require('multer');
 const path = require('path');
+const upload = require('../config/multerConfig');
 
-//handle file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads/');
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname)); 
-    }
-});
-
-const upload = multer({ storage });
-
-
-//get aboutus page
+// Get about us page
 exports.getAboutUsPage = (req, res) => {
     const user = req.session.user || null; 
     res.render('aboutus', { user });
 };
 
-//get contact page
+// Get contact page
 exports.loadContactPage = (req, res) => {
     const user = req.session.user || null; 
     res.render('contact', { user }); 
 };
 
-//get Login 
+// Get Login 
 exports.getLoginPage = (req, res) => {
     const errorMsg = req.session.errorMsg;
     req.session.errorMsg = null; 
     res.render('login', { errorMsg });
 };
 
-//get signup
+// Get signup
 exports.getSignupPage = (req, res) => {
     res.render('signup');
 };
 
-
-//post sign up
+// Post sign up
 exports.postSignup = async (req, res) => {
     const { fullname, email, password, role } = req.body;
     try {
@@ -56,7 +42,7 @@ exports.postSignup = async (req, res) => {
     }
 };
 
-// post Login
+// Post Login
 exports.postLogin = async (req, res) => {
     const { email, password } = req.body;
 
@@ -79,12 +65,8 @@ exports.postLogin = async (req, res) => {
 
         const user = await userModel.findUserByEmail(email);
         if (user && await bcrypt.compare(password, user.password)) {
-            req.session.user = user;
-            if (user.role === 'admin') {
-                res.redirect('/admin/dashboard');
-            } else {
-                res.redirect('/welcome');
-            }
+            req.session.user = user; // Store the entire user object
+            res.redirect(user.role === 'admin' ? '/admin/dashboard' : '/welcome');
         } else {
             req.session.errorMsg = 'Invalid credentials. Please try again.';
             res.redirect('/login');
@@ -96,8 +78,7 @@ exports.postLogin = async (req, res) => {
     }
 };
 
-
-//get welcome oage
+// Get welcome page
 exports.getWelcomePage = (req, res) => {
     if (req.session.user) {
         res.render('welcome', { user: req.session.user });
@@ -107,7 +88,7 @@ exports.getWelcomePage = (req, res) => {
     }
 };
 
-//get admin dashboard
+// Get admin dashboard
 exports.getAdminDashboard = (req, res) => {
     if (req.session.user && req.session.user.role === 'admin') {
         res.render('admin/dashboard');
@@ -117,14 +98,14 @@ exports.getAdminDashboard = (req, res) => {
     }
 };
 
-//logout
+// Logout
 exports.logout = (req, res) => {
     req.session.destroy(() => {
         res.redirect('/login');
     });
 };
 
-//get userProfile
+// Get user profile
 exports.getUserProfile = (req, res) => {
     if (req.session.user) {
         const user = req.session.user;
@@ -139,12 +120,12 @@ exports.getUserProfile = (req, res) => {
     }
 };
 
-//upload profile picture
+// Upload profile picture
 exports.uploadProfilePic = async (req, res) => {
     console.log('Uploaded file:', req.file);
     const userId = req.session.user.id; 
     const profilePic = req.file ? req.file.filename : null;
-//update profile picture
+
     if (profilePic) {
         try {
             await userModel.updateProfilePic(userId, profilePic);
@@ -163,5 +144,3 @@ exports.uploadProfilePic = async (req, res) => {
 };
 
 exports.handleProfilePicUpload = upload.single('profilePic');
-
-
