@@ -150,9 +150,23 @@
     }
 
     .product-image {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
+      width: 80px;        
+      height: 80px;       
+      object-fit: cover;  
+    }
+
+    .edit-btn {
+      padding: 5px 10px;
+      background-color: #ffc107;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .edit-btn:hover {
+      background-color: #e0a800;
     }
   </style>
 </head>
@@ -191,6 +205,8 @@
         <h1>Product List</h1>
         <a href="/admin/add-product" class="add-product-btn">Add Product</a>
       </div>
+
+      <!-- Product Table -->
       <table>
         <thead>
           <tr>
@@ -201,6 +217,7 @@
             <th>Image</th>
             <th>Created At</th>
             <th>Updated At</th>
+            <th>Actions</th> 
           </tr>
         </thead>
         <tbody>
@@ -213,18 +230,22 @@
                 <td><%= product.quantity %></td>
                 <td>
                   <% if (product.product_image) { %>
-                    <img src="<%= product.product_image %>" alt="Product Image" class="product-image">
+                    <img src="/uploads/<%= product.product_image.split('/').pop() %>" alt="<%= product.product_name %>" class="product-image">
                   <% } else { %>
                     No Image
                   <% } %>
                 </td>
                 <td><%= product.created_at %></td>
                 <td><%= product.updated_at %></td>
+                <td>
+                  <!-- Edit Button -->
+                  <a href="/admin/edit-product/<%= product.id %>" class="edit-btn">Edit</a>
+                </td>
               </tr>
             <% }); %>
           <% } else { %>
             <tr>
-              <td colspan="7" style="text-align: center;">No products available</td>
+              <td colspan="8" style="text-align: center;">No products available</td>
             </tr>
           <% } %>
         </tbody>

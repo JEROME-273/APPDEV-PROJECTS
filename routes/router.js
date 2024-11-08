@@ -21,10 +21,15 @@ router.get('/shop', shopController.getShopPage);
 router.get('/profile', userController.getUserProfile);
 router.post('/profile', userController.handleProfilePicUpload, userController.uploadProfilePic);
 
+// Edit Product routes
+router.get('/admin/edit-product/:id', adminController.getEditProductPage);  
+router.post('/admin/edit-product/:id', upload.single('product_image'), adminController.postEditProduct);
+
 // Cart routes
 router.get('/cart', cartController.getCartPage); 
 router.post('/cart/add', cartController.addToCart); 
 router.delete('/remove-from-cart', cartController.removeFromCart); 
+router.put('/update-cart', cartController.updateCart);
 
 // Checkout routes
 router.get('/checkout', cartController.getCheckoutPage);  

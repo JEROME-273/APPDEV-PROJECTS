@@ -193,9 +193,19 @@
         }
 
         .alert {
-            display: none;
-            color: green;
-            margin: 20px;
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        background-color: #2d7b3b;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 18px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
         }
 
         .dropdown-menu {
@@ -226,6 +236,7 @@
         .dropdown-menu a:hover {
             background-color: #f4f4f4;
         }
+
         .view-cart-btn {
             background-color: #2d7b3b;
             color: white;
@@ -295,7 +306,7 @@
     <section class="products">
         <% products.forEach(product => { %>
             <div class="product-card">
-                <img src="/uploads/<%= product.product_image.split('/').pop() %>" alt="<%= product.product_name %>">
+                <img src="<%= product.product_image ? '/uploads/' + product.product_image.split('/').pop() : '/images/default-product-image.jpg' %>" alt="<%= product.product_name %>">
                 <h3><%= product.product_name %></h3>
                 <p>Price: $<%= (typeof product.price === 'number' ? product.price.toFixed(2) : 'N/A') %></p>
                 <p>Stocks: <%= product.quantity %></p>
@@ -358,6 +369,5 @@
             });
         }
     </script>
-
 </body>
 </html>

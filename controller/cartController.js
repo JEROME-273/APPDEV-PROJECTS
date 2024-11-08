@@ -59,19 +59,45 @@ exports.addToCart = async (req, res) => {
 // Remove from cart
 exports.removeFromCart = (req, res) => {
     const productId = req.body.productId;
-    
-    if (!req.session.cart) {
+
+    if (!req.session.cart || req.session.cart.length === 0) {
         return res.status(400).json({ message: 'Cart is empty' });
     }
-
     const initialLength = req.session.cart.length;
-    req.session.cart = req.session.cart.filter(item => item.id !== productId); 
-
+    req.session.cart = req.session.cart.filter(item => item.id !== productId);
     if (req.session.cart.length < initialLength) {
-        res.json({ message: 'Product removed from cart', cart: req.session.cart });
+        const totalAmount = req.session.cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+        return res.json({
+            message: 'Product removed from cart',
+            cart: req.session.cart,
+            totalAmount: totalAmount.toFixed(2)  
+        });
     } else {
-        res.status(404).json({ message: 'Product not found in cart' });
+        return res.status(404).json({ message: 'Product not found in cart' });
     }
+};
+
+
+// Update quantity in the cart
+exports.updateCart = (req, res) => {
+    const { productId, quantity } = req.body;
+    if (isNaN(quantity) || quantity <= 0) {
+        return res.status(400).json({ message: 'Invalid quantity' });
+    }
+    const cart = req.session.cart || [];
+    const productIndex = cart.findIndex(item => item.id === productId);
+
+    if (productIndex === -1) {
+        return res.status(404).json({ message: 'Product not found in cart' });
+    }
+    cart[productIndex].quantity = quantity;
+
+    const totalAmount = cart.reduce((total, item) => total + (parseFloat(item.price) * item.quantity), 0);
+    res.json({
+        success: true,    
+        cart,
+        totalAmount: totalAmount.toFixed(2) 
+    });
 };
 
 // Get checkout page
@@ -114,6 +140,7 @@ exports.confirmPayment = async (req, res) => {
         const [order] = await connection.query(
             `INSERT INTO orders (user_id, address, contact_number, payment_method, total_amount)
              VALUES (?, ?, ?, ?, ?)`,
+
             [userId, address, cpnumber, paymentMethod, cart.reduce((total, item) => total + item.price * item.quantity, 0)]
         );
 
@@ -127,8 +154,6 @@ exports.confirmPayment = async (req, res) => {
              VALUES ?`,
             [orderItems]
         );
-
-        // Update the products table, reducing the stock quantity
         for (const item of cart) {
             await connection.query(
                 `UPDATE products SET quantity = quantity - ? WHERE id = ?`,
@@ -137,8 +162,6 @@ exports.confirmPayment = async (req, res) => {
         }
         await connection.commit();
         req.session.cart = [];
-
-        // Redirect to the thank you page
         res.redirect('/thankyou');
     } catch (error) {
         await connection.rollback();
@@ -149,9 +172,8 @@ exports.confirmPayment = async (req, res) => {
     }
 };
 
-
 // Thank you page after successful order
 exports.getThankYouPage = (req, res) => {
     const user = req.session.user || null;
-    res.render('thankyou', { user }); // This will render the thankyou.ejs file
+    res.render('thankyou', { user }); 
 };
