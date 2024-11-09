@@ -19,6 +19,7 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/router');
 const cors = require('cors');
 const app = express();
+const session = require('express-session');
 
 
 //middleware
