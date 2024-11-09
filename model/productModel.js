@@ -15,8 +15,14 @@ const productModel = {
     getProductById: async (id) => {
         const query = 'SELECT * FROM products WHERE id = ?';
         const [rows] = await db.execute(query, [id]);
-        return rows[0]; 
+        if (rows.length > 0) {
+            const product = rows[0];
+            product.price = parseFloat(product.price);  
+            return product;
+        }
+        return null; 
     },
+    
 
     addCartItem: async (userId, product) => {
         const { id, product_name, price, product_image, quantity } = product;
@@ -37,7 +43,7 @@ const productModel = {
         await db.execute(query, [quantity, userId, productId]);
     },
 
-    // New function to update the product quantity after the order is confirmed
+    
     updateProductQuantity: async (productId, quantity) => {
         const query = 'UPDATE products SET quantity = quantity - ? WHERE id = ?';
         try {

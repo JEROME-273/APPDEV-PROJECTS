@@ -145,8 +145,6 @@ exports.confirmPayment = async (req, res) => {
         );
 
         const orderId = order.insertId;  
-
-        // Insert all products into order_items table
         const orderItems = cart.map(item => [
             orderId, item.id, item.product_name, item.product_image, item.quantity
         ]);
@@ -157,7 +155,6 @@ exports.confirmPayment = async (req, res) => {
             [orderItems]
         );
 
-        // Adjust product stock (if needed)
         for (const item of cart) {
             await connection.query(
                 `UPDATE products SET quantity = quantity - ? WHERE id = ?`,
@@ -166,8 +163,8 @@ exports.confirmPayment = async (req, res) => {
         }
 
         await connection.commit();
-        req.session.cart = []; // Clear the cart
-        res.redirect('/thankyou'); // Redirect to thank you page
+        req.session.cart = []; 
+        res.redirect('/thankyou');
     } catch (error) {
         await connection.rollback();
         console.error('Error confirming payment:', error);
@@ -176,7 +173,6 @@ exports.confirmPayment = async (req, res) => {
         connection.release();
     }
 };
-
 
 
 // Thank you page after successful order

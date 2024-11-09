@@ -41,6 +41,25 @@
       list-style: none;
       padding: 20px 0;
     }
+    .sidebar {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh; 
+  background-color: #2e3b4e;
+  color: #fff;
+  padding-top: 20px;
+  z-index: 100; 
+}
+
+.main-content {
+  margin-left: 250px; 
+  padding: 20px;
+  background-color: #1b2533;
+  color: #fff;
+  flex: 1;
+}
 
     .sidebar nav ul li a {
       display: block;
@@ -141,38 +160,77 @@
     }
 
     tr {
-      background-color: #fff; 
-      color: #1b2533; 
+      background-color: #fff;
+      color: #1b2533;
     }
 
     tr:hover {
-      background-color: #f1f1f1; 
+      background-color: #f1f1f1;
     }
 
     .product-image {
-      width: 80px;        
-      height: 80px;       
-      object-fit: cover;  
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
     }
 
-    .edit-btn {
-      padding: 5px 10px;
-      background-color: #ffc107;
+     .edit-btn, .delete-btn {
+  padding: 8px 16px; 
+  font-size: 14px; 
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 10px; 
+  display: inline-block; 
+  box-sizing: border-box; 
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: white;
+  width: 100%; 
+  justify-content: center; 
+  align-items: center;     
+  height: 40px; 
+  padding-left: 30px;  
+  padding-top: 12px;
+}
+
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  width: 100%; 
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+button {
+  width: auto; 
+}
+
+    .success-message {
+      background-color: #28a745;
       color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .edit-btn:hover {
-      background-color: #e0a800;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      font-size: 16px;
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="logo">
         <img src="/images/agri_logo.jpeg" alt="Logo">
@@ -182,15 +240,16 @@
           <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
           <li><a href="/admin/products"><i class="fas fa-box"></i> Products</a></li>
           <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-          <li><a href="/admin/order-history"><i class="fas fa-history"></i> Order History</a></li>
+          <li><a href="/admin/cancelled-orders"><i class="fas fa-ban"></i> Cancelled Orders</a></li>
+          <li><a href="/admin/order-history"><i class="fas fa-history"></i> Transaction History</a></li>
           <li><a href="/admin/messages"><i class="fas fa-comments"></i> Messages</a></li>
           <li><a href="/admin/accounts"><i class="fas fa-users"></i> Accounts</a></li>
         </ul>
       </nav>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
+
       <header>
         <div class="search-bar">
           <input type="text" placeholder="Search">
@@ -207,7 +266,6 @@
         <a href="/admin/add-product" class="add-product-btn">Add Product</a>
       </div>
 
-      <!-- Product Table -->
       <table>
         <thead>
           <tr>
@@ -216,7 +274,8 @@
             <th>Price</th>
             <th>Quantity</th>
             <th>Image</th>
-            <th>Actions</th> 
+            <th>Description</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -234,9 +293,12 @@
                     No Image
                   <% } %>
                 </td>
+                <td><%= product.description %></td>
                 <td>
-                  <!-- Edit Button -->
-                  <a href="/admin/edit-product/<%= product.id %>" class="edit-btn">Edit</a>
+                  <a href="/admin/edit-product/<%= product.id %>" class="edit-btn">Edit</a><br><br>
+                  <form action="/admin/delete-product/<%= product.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                  </form>
                 </td>
               </tr>
             <% }); %>
@@ -253,9 +315,10 @@
   <script>
     function confirmLogout() {
       if (confirm("Are you sure you want to log out?")) {
-        window.location.href = '/login'; 
+        window.location.href = '/login';
       }
     }
+
   </script>
 </body>
 </html>

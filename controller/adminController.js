@@ -24,13 +24,14 @@ exports.getAddProductPage = (req, res) => {
   
   //add product to db
   exports.postAddProduct = async (req, res) => {
-    const { product_name, price, quantity } = req.body;
+    const { product_name, price, quantity, description } = req.body;
     const product_image = req.file ? req.file.path.replace(/\\/g, '/') : null;  
 
     const errors = [];
     if (!product_name) errors.push('Product name is required.');
     if (!price) errors.push('Price is required.');
     if (!quantity) errors.push('Quantity is required.');
+    if (!description) errors.push('Description is required.');
 
     if (errors.length > 0) {
         return res.redirect(`/admin/add-product?errors=${encodeURIComponent(errors.join(','))}`);
@@ -38,8 +39,8 @@ exports.getAddProductPage = (req, res) => {
 
     try {
         await db.query(
-            'INSERT INTO products (product_name, price, quantity, product_image) VALUES (?, ?, ?, ?)',
-            [product_name, price, quantity, product_image]
+            'INSERT INTO products (product_name, price, quantity, product_image, description) VALUES (?, ?, ?, ?, ?)',
+            [product_name, price, quantity, product_image, description]
         );
         res.redirect('/admin/products?success=Product added successfully.');
     } catch (error) {
@@ -72,7 +73,7 @@ exports.getEditProductPage = async (req, res) => {
 // Post Edit Product
 exports.postEditProduct = async (req, res) => {
   const productId = req.params.id;
-  const { product_name, price, quantity } = req.body;
+  const { product_name, price, quantity, description } = req.body;
   let product_image = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
   try {
@@ -82,7 +83,6 @@ exports.postEditProduct = async (req, res) => {
       return res.status(404).send('Product not found');
     }
 
-    // If no new image was uploaded, keep the current image
     if (!product_image) {
       product_image = product[0].product_image;
     }
@@ -96,8 +96,8 @@ exports.postEditProduct = async (req, res) => {
       return res.redirect(`/admin/edit-product/${productId}?errors=${encodeURIComponent(errors.join(','))}`);
     }
     await db.query(
-      'UPDATE products SET product_name = ?, price = ?, quantity = ?, product_image = ? WHERE id = ?',
-      [product_name, price, quantity, product_image, productId]
+      'UPDATE products SET product_name = ?, price = ?, quantity = ?, product_image = ?, description = ? WHERE id = ?',
+      [product_name, price, quantity, product_image, description, productId]
     );
 
     res.redirect('/admin/products?success=Product updated successfully.');
@@ -107,11 +107,25 @@ exports.postEditProduct = async (req, res) => {
   }
 };
 
+exports.deleteProduct = async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    // Delete product from the database
+    await db.query('DELETE FROM products WHERE id = ?', [productId]);
+
+    // Redirect to the products page with a success message
+    res.redirect('/admin/products?success=Product%20deleted%20successfully.');
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).send('Error deleting product');
+  }
+};
+
 
 // Get the Orders page
 exports.getOrders = async (req, res) => {
   try {
-    // Fetch orders along with the order items (products) using a JOIN
     const [orders] = await db.query(`
       SELECT o.order_id, o.user_id, o.address, o.contact_number, o.payment_method, o.total_amount, o.status, o.created_at,
              oi.product_name, oi.product_image, oi.quantity
@@ -121,11 +135,8 @@ exports.getOrders = async (req, res) => {
       ORDER BY o.created_at DESC
     `);
     
-    // If no products are associated with an order (in case of LEFT JOIN), we can handle this gracefully
     const ordersWithItems = orders.reduce((acc, order) => {
       const { order_id, user_id, address, contact_number, payment_method, total_amount, status, created_at, product_name, product_image, quantity } = order;
-
-      // Check if the order already exists in the accumulator
       let existingOrder = acc.find(o => o.order_id === order_id);
 
       if (!existingOrder) {
@@ -135,7 +146,6 @@ exports.getOrders = async (req, res) => {
         acc.push(existingOrder);
       }
 
-      // Add the product to the order's items list
       if (product_name) {
         existingOrder.items.push({
           product_name, product_image, quantity
@@ -145,15 +155,12 @@ exports.getOrders = async (req, res) => {
       return acc;
     }, []);
 
-    // Format the total amount for each order (ensure proper decimal format)
     ordersWithItems.forEach(order => {
       order.total_amount = parseFloat(order.total_amount).toFixed(2);
     });
 
-    // Extract 'success' from the query string (if it exists)
     const success = req.query.success || null;
 
-    // Pass 'ordersWithItems' and 'success' to the view
     res.render('admin/orders', { orders: ordersWithItems, success });
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -162,23 +169,18 @@ exports.getOrders = async (req, res) => {
 };
 
 
-
+//confirm orders
 exports.confirmOrder = async (req, res) => {
   const orderId = req.params.order_id;
 
-  const connection = await db.getConnection(); // Get a connection from the pool
+  const connection = await db.getConnection();
   try {
-    // Start a transaction
     await connection.beginTransaction();
-
-    // Query the order to get its details
     const [order] = await connection.query('SELECT * FROM orders WHERE order_id = ?', [orderId]);
 
     if (order.length === 0) {
       return res.status(404).send('Order not found');
     }
-
-    // Insert the order into the order_history table
     await connection.query(`
       INSERT INTO order_history (order_id, user_id, address, contact_number, payment_method, total_amount, status, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -189,38 +191,28 @@ exports.confirmOrder = async (req, res) => {
       order[0].contact_number,
       order[0].payment_method,
       order[0].total_amount,
-      'confirmed', // Set the status to "confirmed"
+      'confirmed',
       order[0].created_at
     ]);
 
-    // Update the order status to 'confirmed' in the orders table (don't delete)
     await connection.query('UPDATE orders SET status = ? WHERE order_id = ?', ['confirmed', orderId]);
-
-    // Commit the transaction
     await connection.commit();
-
-    // Redirect back to the orders page with a success message
     res.redirect('/admin/orders?success=Order%20confirmed%20and%20moved%20to%20history.');
   } catch (error) {
-    // Rollback in case of error
     await connection.rollback();
     console.error('Error confirming order:', error);
     res.status(500).send('Error confirming order');
   } finally {
-    // Release the connection back to the pool
     connection.release();
   }
 };
 
 
 
-
+//get transaction history
 exports.getOrderHistory = async (req, res) => {
   try {
-    // Fetch confirmed orders from the order_history table
     const [orders] = await db.query('SELECT * FROM order_history ORDER BY created_at DESC');
-
-    // Render the order history page and pass the orders
     res.render('admin/order_history', { orders });
   } catch (error) {
     console.error('Error fetching order history:', error);
@@ -230,16 +222,9 @@ exports.getOrderHistory = async (req, res) => {
 
 // Delete Order History
 exports.deleteHistory = async (req, res) => {
-  const orderId = req.params.order_id; // Get the order_id from the URL
-
+  const orderId = req.params.order_id;
   try {
-    // Query to delete the order from the order_history table
     await db.query('DELETE FROM order_history WHERE order_id = ?', [orderId]);
-
-    // Optionally, you can also delete the order from the orders table if needed
-    // await db.query('DELETE FROM orders WHERE order_id = ?', [orderId]);
-
-    // Redirect to the order history page after deletion
     res.redirect('/admin/order-history');
   } catch (error) {
     console.error('Error deleting order from history:', error);
@@ -248,6 +233,75 @@ exports.deleteHistory = async (req, res) => {
 };
 
 
+// Get the Cancelled Orders page
+exports.getCancelledOrders = async (req, res) => {
+  try {
+    const [orders] = await db.query(`
+      SELECT o.order_id, o.user_id, o.address, o.contact_number, o.payment_method, o.total_amount, o.status, o.created_at,
+             oi.product_name, oi.product_image, oi.quantity
+      FROM orders o
+      LEFT JOIN order_items oi ON o.order_id = oi.order_id
+      WHERE o.status = "cancelled"
+      ORDER BY o.created_at DESC
+    `);
+
+    const cancelledOrders = orders.reduce((acc, order) => {
+      const { order_id, user_id, address, contact_number, payment_method, total_amount, status, created_at, product_name, product_image, quantity } = order;
+      let existingOrder = acc.find(o => o.order_id === order_id);
+
+      if (!existingOrder) {
+        existingOrder = {
+          order_id, user_id, address, contact_number, payment_method, total_amount, status, created_at, items: []
+        };
+        acc.push(existingOrder);
+      }
+
+      if (product_name) {
+        existingOrder.items.push({
+          product_name, product_image, quantity
+        });
+      }
+
+      return acc;
+    }, []);
+
+    cancelledOrders.forEach(order => {
+      order.total_amount = parseFloat(order.total_amount).toFixed(2);
+    });
+
+    const success = req.query.success || null;
+
+    res.render('admin/cancelled_orders', { cancelledOrders, success });
+  } catch (error) {
+    console.error('Error fetching cancelled orders:', error);
+    res.status(500).send('Error fetching cancelled orders');
+  }
+};
+
+
+exports.deleteCancelledOrder = async (req, res) => {
+  const orderId = req.params.order_id; 
+  console.log(`Deleting cancelled order with ID: ${orderId}`);
+
+  try {
+    await db.query('DELETE FROM orders WHERE order_id = ? AND status = "cancelled"', [orderId]);
+    res.redirect('/admin/cancelled-orders?success=Order%20deleted%20successfully.');
+  } catch (error) {
+    console.error('Error deleting cancelled order:', error);
+    res.status(500).send('Error deleting cancelled order');
+  }
+};
 
   
+exports.clearAllCancelledOrders = async (req, res) => {
+  try {
+    await db.query('DELETE FROM orders WHERE status = "cancelled"');
+    res.redirect('/admin/cancelled-orders?success=All cancelled orders have been deleted.');
+  } catch (error) {
+    console.error('Error clearing cancelled orders:', error);
+    res.status(500).send('Error clearing cancelled orders');
+  }
+};
+
+
   

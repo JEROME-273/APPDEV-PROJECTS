@@ -20,10 +20,12 @@ router.get('/admin/dashboard', userController.getAdminDashboard);
 router.get('/shop', shopController.getShopPage); 
 router.get('/profile', userController.getUserProfile);
 router.post('/profile', userController.handleProfilePicUpload, userController.uploadProfilePic);
+router.get('/product/:id', shopController.getProductDetails); 
 
 // Edit Product routes
 router.get('/admin/edit-product/:id', adminController.getEditProductPage);  
 router.post('/admin/edit-product/:id', upload.single('product_image'), adminController.postEditProduct);
+
 
 // Cart routes
 router.get('/cart', cartController.getCartPage); 
@@ -40,8 +42,13 @@ router.get('/thankyou', cartController.getThankYouPage);
 // Admin product routes
 router.get('/admin/products', adminController.getProducts);           
 router.get('/admin/add-product', adminController.getAddProductPage);  
+router.post('/admin/delete-product/:id', adminController.deleteProduct);
 router.post('/admin/add-product', upload.single('product_image'), adminController.postAddProduct);  
 router.get('/admin/confirm-order/:order_id', adminController.confirmOrder);
+router.post('/order/cancel/:order_id', shopController.cancelOrder);
+router.get('/admin/cancelled-orders', adminController.getCancelledOrders); 
+router.post('/admin/delete-cancelled-order/:order_id', adminController.deleteCancelledOrder);
+router.post('/admin/clear-cancelled-orders', adminController.clearAllCancelledOrders);
 
 // Admin Orders routes
 router.get('/admin/orders', adminController.getOrders); 

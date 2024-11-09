@@ -137,6 +137,25 @@
     .chart-container h3 {
       margin-bottom: 10px;
     }
+    .sidebar {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh; 
+  background-color: #2e3b4e;
+  color: #fff;
+  padding-top: 20px;
+  z-index: 100; 
+}
+
+.main-content {
+  margin-left: 250px; 
+  padding: 20px;
+  background-color: #1b2533;
+  color: #fff;
+  flex: 1;
+}
   </style>
 </head>
 <body>
@@ -151,7 +170,8 @@
           <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
           <li><a href="/admin/products"><i class="fas fa-box"></i> Products</a></li>
           <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-          
+          <li><a href="/admin/cancelled-orders"><i class="fas fa-ban"></i> Cancelled Orders</a></li>
+          <li><a href="/admin/order-history"><i class="fas fa-history"></i> Transaction History</a></li>
           <li><a href="/admin/messages"><i class="fas fa-comments"></i> Messages</a></li>
           <li><a href="/admin/accounts"><i class="fas fa-users"></i> Accounts</a></li>
         </ul>
