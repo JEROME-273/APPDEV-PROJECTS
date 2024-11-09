@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Products</title>
+  <title>Admin - Order History</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
@@ -97,23 +97,6 @@
       background-color: #c82333;
     }
 
-    .add-product-btn {
-      padding: 8px 16px;
-      font-size: 14px;
-      background-color: #28a745;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      margin-bottom: 20px;
-      float: right;
-    }
-
-    .add-product-btn:hover {
-      background-color: #218838;
-    }
-
     .header-container {
       display: flex;
       justify-content: space-between;
@@ -141,21 +124,15 @@
     }
 
     tr {
-      background-color: #fff; 
-      color: #1b2533; 
+      background-color: #fff;
+      color: #1b2533;
     }
 
     tr:hover {
-      background-color: #f1f1f1; 
+      background-color: #f1f1f1;
     }
 
-    .product-image {
-      width: 80px;        
-      height: 80px;       
-      object-fit: cover;  
-    }
-
-    .edit-btn {
+    .confirm-btn, .decline-btn, .delete-btn {
       padding: 5px 10px;
       background-color: #ffc107;
       color: white;
@@ -165,8 +142,45 @@
       text-decoration: none;
     }
 
-    .edit-btn:hover {
-      background-color: #e0a800;
+    .confirm-btn {
+      background-color: #28a745;
+    }
+
+    .decline-btn {
+      background-color: #dc3545;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+    }
+
+    .confirm-btn:hover {
+      background-color: #218838;
+    }
+
+    .decline-btn:hover {
+      background-color: #c82333;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    .add-product-btn {
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-bottom: 20px;
+      float: right;
+    }
+
+    .add-product-btn:hover {
+      background-color: #218838;
     }
   </style>
 </head>
@@ -191,71 +205,73 @@
 
     <!-- Main Content -->
     <main class="main-content">
-      <header>
-        <div class="search-bar">
-          <input type="text" placeholder="Search">
-          <button><i class="fas fa-search"></i></button>
-        </div>
-        <div class="profile">
-          <i class="fas fa-user-circle"></i>
-          <button class="logout-btn" onclick="confirmLogout()">Logout</button>
-        </div>
-      </header>
+        <header>
+            <div class="search-bar">
+              <input type="text" placeholder="Search">
+              <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="profile">
+              <i class="fas fa-user-circle"></i>
+              <button class="logout-btn" onclick="confirmLogout()">Logout</button>
+            </div>
+          </header>
+          
 
+      <!-- Order History Table -->
       <div class="header-container">
-        <h1>Product List</h1>
-        <a href="/admin/add-product" class="add-product-btn">Add Product</a>
+        <h1>Order History</h1>
       </div>
 
-      <!-- Product Table -->
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Product Name</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Image</th>
+            <th>Order ID</th>
+            <th>Total Amount</th>
+            <th>Payment Method</th>
+            <th>Status</th>
+            <th>Order Date</th>
             <th>Actions</th> 
           </tr>
         </thead>
         <tbody>
-          <% if (products && products.length > 0) { %>
-            <% products.forEach(product => { %>
+          <% if (orders && orders.length > 0) { %>
+            <% orders.forEach(order => { %>
               <tr>
-                <td><%= product.id %></td>
-                <td><%= product.product_name %></td>
-                <td>₱<%= product.price ? product.price.toFixed(2) : 'N/A' %></td>
-                <td><%= product.quantity %></td>
+                <td><%= order.order_id %></td>
+                <td>₱<%= order.total_amount %></td>
+                <td><%= order.payment_method %></td>
+                <td><%= order.status %></td>
+                <td><%= order.created_at %></td>
                 <td>
-                  <% if (product.product_image) { %>
-                    <img src="/uploads/<%= product.product_image.split('/').pop() %>" alt="<%= product.product_name %>" class="product-image">
-                  <% } else { %>
-                    No Image
-                  <% } %>
-                </td>
-                <td>
-                  <!-- Edit Button -->
-                  <a href="/admin/edit-product/<%= product.id %>" class="edit-btn">Edit</a>
+                  
+                  <a href="#" class="delete-btn" data-order-id="<%= order.order_id %>">Delete</a>
                 </td>
               </tr>
             <% }); %>
           <% } else { %>
             <tr>
-              <td colspan="8" style="text-align: center;">No products available</td>
+              <td colspan="6" style="text-align: center;">No confirmed orders found</td>
             </tr>
           <% } %>
         </tbody>
-      </table>
+      </table>      
     </main>
   </div>
 
   <script>
-    function confirmLogout() {
-      if (confirm("Are you sure you want to log out?")) {
-        window.location.href = '/login'; 
-      }
-    }
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const orderId = this.getAttribute('data-order-id');
+        
+       
+        if (confirm(`Are you sure you want to delete order ID ${orderId} from history?`)) {
+          window.location.href = `/admin/delete-history/${orderId}`;
+        }
+      });
+    });
   </script>
+  
 </body>
 </html>

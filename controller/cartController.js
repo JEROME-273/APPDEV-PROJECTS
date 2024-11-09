@@ -137,32 +137,37 @@ exports.confirmPayment = async (req, res) => {
     const connection = await db.getConnection();  
     try {
         await connection.beginTransaction();
+        const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
         const [order] = await connection.query(
-            `INSERT INTO orders (user_id, address, contact_number, payment_method, total_amount)
-             VALUES (?, ?, ?, ?, ?)`,
-
-            [userId, address, cpnumber, paymentMethod, cart.reduce((total, item) => total + item.price * item.quantity, 0)]
+            `INSERT INTO orders (user_id, address, contact_number, payment_method, total_amount, status, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+            [userId, address, cpnumber, paymentMethod, totalAmount, 'pending']
         );
 
         const orderId = order.insertId;  
+
+        // Insert all products into order_items table
         const orderItems = cart.map(item => [
             orderId, item.id, item.product_name, item.product_image, item.quantity
         ]);
-        
+
         await connection.query(
             `INSERT INTO order_items (order_id, product_id, product_name, product_image, quantity)
              VALUES ?`,
             [orderItems]
         );
+
+        // Adjust product stock (if needed)
         for (const item of cart) {
             await connection.query(
                 `UPDATE products SET quantity = quantity - ? WHERE id = ?`,
                 [item.quantity, item.id]
             );
         }
+
         await connection.commit();
-        req.session.cart = [];
-        res.redirect('/thankyou');
+        req.session.cart = []; // Clear the cart
+        res.redirect('/thankyou'); // Redirect to thank you page
     } catch (error) {
         await connection.rollback();
         console.error('Error confirming payment:', error);
@@ -171,6 +176,8 @@ exports.confirmPayment = async (req, res) => {
         connection.release();
     }
 };
+
+
 
 // Thank you page after successful order
 exports.getThankYouPage = (req, res) => {

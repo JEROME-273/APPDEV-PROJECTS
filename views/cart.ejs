@@ -340,7 +340,7 @@
         </table>
         <% if (cart && cart.length > 0) { %>
             <div class="total">
-                Total Amount: $<%= totalAmount ? totalAmount.toFixed(2) : '0.00' %>
+                Total Amount: ₱<%= totalAmount ? totalAmount.toFixed(2) : '0.00' %>
             </div>
             <button class="checkout-button" onclick="checkout()">Proceed to Checkout</button>
         <% } %>

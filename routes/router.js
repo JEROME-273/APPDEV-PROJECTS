@@ -31,6 +31,7 @@ router.post('/cart/add', cartController.addToCart);
 router.delete('/remove-from-cart', cartController.removeFromCart); 
 router.put('/update-cart', cartController.updateCart);
 
+
 // Checkout routes
 router.get('/checkout', cartController.getCheckoutPage);  
 router.post('/checkout/confirm', cartController.confirmPayment); 
@@ -40,5 +41,13 @@ router.get('/thankyou', cartController.getThankYouPage);
 router.get('/admin/products', adminController.getProducts);           
 router.get('/admin/add-product', adminController.getAddProductPage);  
 router.post('/admin/add-product', upload.single('product_image'), adminController.postAddProduct);  
+router.get('/admin/confirm-order/:order_id', adminController.confirmOrder);
+
+// Admin Orders routes
+router.get('/admin/orders', adminController.getOrders); 
+
+// Admin Order History routes
+router.get('/admin/order-history', adminController.getOrderHistory); 
+router.get('/admin/delete-history/:order_id', adminController.deleteHistory);
 
 module.exports = router;
