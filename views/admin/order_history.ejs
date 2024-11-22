@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Order History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #2e3b4e;
+      color: #fff;
+      padding-top: 20px;
+    }
+
+    .sidebar .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .sidebar .logo img {
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 20px 0;
+    }
+
+    .sidebar nav ul li a {
+      display: block;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .sidebar nav ul li a:hover {
+      background-color: #3f4d63;
+    }
+
+    .main-content {
+      flex: 1;
+      background-color: #1b2533;
+      color: #fff;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+    }
+
+    .search-bar input {
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile i {
+      font-size: 40px;
+      color: #fff;
+      margin-right: 10px;
+    }
+
+    .logout-btn {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #dc3545;
+      color: white;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background-color: #c82333;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2c3e50;
+      color: #fff;
+    }
+
+    tr {
+      background-color: #fff;
+      color: #1b2533;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .confirm-btn, .decline-btn, .delete-btn {
+      padding: 5px 10px;
+      background-color: #ffc107;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .confirm-btn {
+      background-color: #28a745;
+    }
+
+    .decline-btn {
+      background-color: #dc3545;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+    }
+
+    .confirm-btn:hover {
+      background-color: #218838;
+    }
+
+    .decline-btn:hover {
+      background-color: #c82333;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    .add-product-btn {
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-bottom: 20px;
+      float: right;
+    }
+
+    .add-product-btn:hover {
+      background-color: #218838;
+    }
+    .sidebar {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh; 
+  background-color: #2e3b4e;
+  color: #fff;
+  padding-top: 20px;
+  z-index: 100; 
+}
+
+.main-content {
+  margin-left: 250px; 
+  padding: 20px;
+  background-color: #1b2533;
+  color: #fff;
+  flex: 1;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="/images/agri_logo.jpeg" alt="Logo">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="/admin/products"><i class="fas fa-box"></i> Products</a></li>
+          <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+          <li><a href="/admin/cancelled-orders"><i class="fas fa-ban"></i> Cancelled Orders</a></li>
+          <li><a href="/admin/order-history"><i class="fas fa-history"></i> Transaction History</a></li>
+          <li><a href="/admin/messages"><i class="fas fa-comments"></i> Messages</a></li>
+          <li><a href="/admin/accounts"><i class="fas fa-users"></i> Accounts</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div class="search-bar">
+              <input type="text" placeholder="Search">
+              <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="profile">
+              <i class="fas fa-user-circle"></i>
+              <button class="logout-btn" onclick="confirmLogout()">Logout</button>
+            </div>
+          </header>
+          
+
+      <!-- Order History Table -->
+      <div class="header-container">
+        <h1>Order Transaction History</h1>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Total Amount</th>
+            <th>Payment Method</th>
+            <th>Status</th>
+            <th>Order Date</th>
+            <th>Actions</th> 
+          </tr>
+        </thead>
+        <tbody>
+          <% if (orders && orders.length > 0) { %>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td><%= order.order_id %></td>
+                <td>₱<%= order.total_amount %></td>
+                <td><%= order.payment_method %></td>
+                <td><%= order.status %></td>
+                <td><%= order.created_at %></td>
+                <td>
+                  
+                  <a href="#" class="delete-btn" data-order-id="<%= order.order_id %>">Delete</a>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="6" style="text-align: center;">No confirmed orders found</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>      
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const orderId = this.getAttribute('data-order-id');
+        
+       
+        if (confirm(`Are you sure you want to delete order ID ${orderId} from history?`)) {
+          window.location.href = `/admin/delete-history/${orderId}`;
+        }
+      });
+    });
+
+    function confirmLogout() {
+      if (confirm("Are you sure you want to log out?")) {
+        window.location.href = '/login';
+      }
+    }
+  </script>
+  
+</body>
+</html>
