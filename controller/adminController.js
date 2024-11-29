@@ -1,4 +1,5 @@
 const db = require('../config/db'); 
+const pool = require('../config/db');
 
 //get product page
 exports.getProducts = async (req, res) => {
@@ -300,6 +301,67 @@ exports.clearAllCancelledOrders = async (req, res) => {
   } catch (error) {
     console.error('Error clearing cancelled orders:', error);
     res.status(500).send('Error clearing cancelled orders');
+  }
+};
+
+exports.loadMessages = async (req, res) => {
+  const userId = req.session.user.id;  // Admin user ID
+
+  console.log('Admin User ID:', userId);  // Log the admin user ID
+
+  try {
+      // Log the query before execution
+      const query = `
+      SELECT c.id AS contact_id, c.message, c.phone_number, c.created_at, u.fullname, u.email
+      FROM contacts c
+      JOIN users u ON c.user_id = u.id
+      ORDER BY c.created_at DESC;
+      
+      `;
+      
+      console.log('SQL Query:', query);  // Log the SQL query
+
+      const [messages] = await pool.query(query, [userId]);
+      
+      console.log('Fetched Messages:', messages);  // Log the fetched messages
+
+      if (messages && messages.length > 0) {
+          res.render('admin/messages', { messages });
+      } else {
+          res.render('admin/messages', { messages: [] });  // Empty array if no messages
+      }
+  } catch (error) {
+      console.error('Error fetching messages:', error);
+      req.session.errorMsg = 'An error occurred while fetching messages.';
+      res.redirect('/admin/dashboard');
+  }
+};
+
+
+// Admin reply to a message
+exports.replyMessage = async (req, res) => {
+  const { messageId, adminReply } = req.body;  // messageId: ID of the contact message, adminReply: the reply text
+  const adminId = req.session.user.id;  // Admin ID
+
+  if (!adminReply || !messageId) {
+      req.session.errorMsg = 'Please provide a reply to the message.';
+      return res.redirect(`/admin/messages/${messageId}`);
+  }
+
+  try {
+      // Insert the admin's reply into the admin_message table
+      const query = `
+          INSERT INTO admin_message (user_id, contact_id, admin_reply)
+          VALUES (?, ?, ?)
+      `;
+      await pool.query(query, [adminId, messageId, adminReply]);
+
+      req.session.successMsg = 'Your reply has been sent.';
+      res.redirect('/admin/messages');  // Redirect back to the message list
+  } catch (error) {
+      console.error('Error replying to message:', error);
+      req.session.errorMsg = 'An error occurred while replying to the message.';
+      res.redirect(`/admin/messages/${messageId}`);
   }
 };
 

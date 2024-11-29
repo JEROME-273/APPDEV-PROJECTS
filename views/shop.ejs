@@ -614,12 +614,12 @@
     <!-- Display Canceled Orders if any -->
     <% if (canceledOrders && canceledOrders.length > 0) { %>
         <div class="canceled-orders">
-            <h2>Cancelled Orders</h2>
+            <h2>Canceled Orders</h2>
             <div class="canceled-order-list">
                 <% canceledOrders.forEach(function(order) { %>
                     <div class="order canceled">
                         <h3>Order ID: <%= order.order_id %></h3>
-                        <p>Status: <strong>Cancelled</strong></p>
+                        <p>Status: <strong>Canceled</strong></p>
                         <p>Total Amount: ₱<%= order.total_amount %></p>
                         <ul>
                             <% order.items.forEach(function(item) { %>

@@ -57,4 +57,13 @@ router.get('/admin/orders', adminController.getOrders);
 router.get('/admin/order-history', adminController.getOrderHistory); 
 router.get('/admin/delete-history/:order_id', adminController.deleteHistory);
 
+//message routes
+router.post('/send-message', userController.postContactMessage);
+router.post('/contact/delete/:id', userController.deleteMessage);
+
+// Admin route to load all messages sent by users
+router.get('/admin/messages', adminController.loadMessages);
+// Admin reply to a user's message
+router.post('/admin/reply-message', adminController.replyMessage);
+
 module.exports = router;

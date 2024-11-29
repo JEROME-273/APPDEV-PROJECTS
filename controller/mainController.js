@@ -3,6 +3,8 @@ const userModel = require('../model/mainModel');
 const multer = require('multer');
 const path = require('path');
 const upload = require('../config/multerConfig');
+const pool = require('../config/db');
+
 
 // Get about us page
 exports.getAboutUsPage = (req, res) => {
@@ -10,11 +12,6 @@ exports.getAboutUsPage = (req, res) => {
     res.render('aboutus', { user });
 };
 
-// Get contact page
-exports.loadContactPage = (req, res) => {
-    const user = req.session.user || null; 
-    res.render('contact', { user }); 
-};
 
 // Get Login 
 exports.getLoginPage = (req, res) => {
@@ -142,5 +139,129 @@ exports.uploadProfilePic = async (req, res) => {
         res.redirect('/profile');
     }
 };
-
 exports.handleProfilePicUpload = upload.single('profilePic');
+
+
+exports.loadContactPage = async (req, res) => {
+    const user = req.session.user || null;
+    const successMsg = req.session.successMsg || null;
+    const errorMsg = req.session.errorMsg || null;
+    req.session.successMsg = null;  // Clear successMsg after rendering
+    req.session.errorMsg = null;    // Clear errorMsg after rendering
+
+    let contactMessages = [];
+    let phone = '';  // Default value for phone
+    let message = ''; // Default value for message (empty)
+
+    if (user) {
+        try {
+            // Fetch all contact messages sent by the logged-in user
+            const query = 'SELECT id, phone_number, message, created_at FROM contacts WHERE user_id = ? ORDER BY created_at DESC';
+            const [result] = await pool.query(query, [user.id]);
+            contactMessages = result; // Store the array of messages
+
+            // Get the phone number from the user's last message (if available)
+            if (result.length > 0) {
+                phone = result[0].phone_number;  // Assuming the latest message's phone number is to be used
+                message = result[0].message; // Get the latest message text
+            }
+        } catch (error) {
+            console.error('Error fetching contact messages:', error);
+        }
+    }
+
+    res.render('contact', {
+        user,
+        successMsg,
+        errorMsg,
+        contactMessages,  // Pass the array of all messages
+        phone,            // Pass the phone number to the EJS template
+        message           // Pass the message to the EJS template
+    });
+};
+
+
+exports.postContactMessage = async (req, res) => {
+    const { phone, message } = req.body;
+    const userId = req.session.user ? req.session.user.id : null;
+
+    // Validate phone and message fields
+    if (!phone || !message) {
+        req.session.errorMsg = 'Please fill in all fields.';
+        return res.redirect('/contact');
+    }
+
+    try {
+        // Insert the contact message into the database
+        await userModel.createContactMessage(userId, phone, message);
+
+        // Set success message in session
+        req.session.successMsg = 'Your message has been sent successfully.';
+        
+        // Fetch all contact messages for the user, including the newly sent one
+        const query = 'SELECT id, phone_number, message, created_at FROM contacts WHERE user_id = ? ORDER BY created_at DESC';
+        const [result] = await pool.query(query, [userId]);
+
+        // Render the contact page with success and all sent messages
+        res.render('contact', {
+            user: req.session.user,
+            successMsg: req.session.successMsg,
+            contactMessages: result,  // Pass the list of all messages, including the new one
+            errorMsg: req.session.errorMsg, // Pass any error message
+            phone: phone,  // Pass the phone number to the template
+            message: message // Pass the message to the template
+        });
+    } catch (error) {
+        console.error('Error during sending message:', error);
+        req.session.errorMsg = 'An error occurred while sending your message. Please try again.';
+        res.redirect('/contact');
+    }
+};
+
+
+// Function to delete the contact message
+exports.deleteMessage = async (req, res) => {
+    const messageId = req.params.id;  // Get the message ID from the URL params
+    const userId = req.session.user ? req.session.user.id : null;
+
+    console.log('Attempting to delete message with ID:', messageId);  // Log the ID to check
+
+    // Ensure the user is logged in
+    if (!userId) {
+        req.session.errorMsg = 'You must be logged in to delete a message.';
+        return res.redirect('/contact');
+    }
+
+    try {
+        // Check if the message belongs to the logged-in user
+        const query = 'SELECT * FROM contacts WHERE id = ? AND user_id = ?';
+        const [result] = await pool.query(query, [messageId, userId]);
+
+        if (result.length === 0) {
+            req.session.errorMsg = 'Message not found or you do not have permission to delete it.';
+            return res.redirect('/contact');
+        }
+
+        // Proceed to delete the message
+        const deleteQuery = 'DELETE FROM contacts WHERE id = ?';
+        await pool.query(deleteQuery, [messageId]);
+
+        req.session.successMsg = 'Your message has been deleted successfully.';
+        res.redirect('/contact');
+    } catch (error) {
+        console.error('Error during message deletion:', error);
+        req.session.errorMsg = 'An error occurred while deleting the message. Please try again.';
+        res.redirect('/contact');
+    }
+};
+
+
+
+
+
+
+
+
+
+
+

@@ -14,7 +14,6 @@
         body {
             font-family: Arial, sans-serif;
             color: #333;
-            background-color: #f4f4f4;
         }
 
         .header {
@@ -43,7 +42,6 @@
 
         .navbar {
             display: flex;
-            align-items: center;
         }
 
         .navbar a {
@@ -64,33 +62,61 @@
             color: #2d7b3b;
         }
 
-        .search-bar {
-            margin: 0 15px;
+        .icons {
+            display: flex;
+            align-items: center;
             position: relative;
         }
 
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
         .search-bar input {
-            padding: 8px;
+            padding: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 14px;
-            width: 200px;
+            margin-right: -5px;
         }
 
         .search-bar button {
-            position: absolute;
-            right: 0;
-            top: 0;
             background-color: #2d7b3b;
-            color: #fff;
+            color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
         }
 
         .search-bar button:hover {
             background-color: #25612c;
+        }
+
+        .user-icon {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .user-icon img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .cart-icon {
+            margin-left: 15px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .cart-icon::before {
+            content: "\f07a";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
         }
 
         .contact-container {
@@ -181,7 +207,7 @@
         .dropdown-menu {
             display: none;
             position: absolute;
-            top: 35px; 
+            top: 35px;
             right: 0;
             background-color: white;
             border: 1px solid #ccc;
@@ -192,7 +218,7 @@
         }
 
         .dropdown-menu.show {
-            display: block; 
+            display: block;
         }
 
         .dropdown-menu a {
@@ -205,6 +231,13 @@
 
         .dropdown-menu a:hover {
             background-color: #f4f4f4;
+        }
+
+        .country-code-select {
+            width: 80px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -222,16 +255,18 @@
             <a href="/shop"><i class="fas fa-shopping-cart"></i>Shop</a>
             <a href="/aboutus"><i class="fas fa-info-circle"></i>About Us</a>
             <a href="/news"><i class="fas fa-newspaper"></i>News</a>
-            <a href="/contact" class="active"><i class="fas fa-envelope"></i>Contact</a>
+            <a href="/contact"><i class="fas fa-envelope"></i>Contact</a>
+        </nav>
+        <div class="icons">
             <div class="search-bar">
-                <input type="text" placeholder="Search...">
+                <input type="text" placeholder="Search">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </div>
             <div class="user-icon" onclick="toggleDropdown(event)">
                 <% if (user && user.profile_pic) { %>
-                    <img src="/uploads/<%= user.profile_pic %>" alt="User Profile" style="width: 30px; height: 30px; border-radius: 50%;">
+                    <img src="/uploads/<%= user.profile_pic %>" alt="User Profile">
                 <% } else { %>
-                    <img src="/images/default-profile.png" alt="Default Profile" style="width: 30px; height: 30px; border-radius: 50%;">
+                    <img src="/images/default-profile.png" alt="Default Profile">
                 <% } %>
             </div>
             <div class="dropdown-menu" id="userDropdown">
@@ -239,8 +274,8 @@
                 <a href="/change-password">Change Password</a>
                 <a href="#" onclick="confirmLogout()">Logout</a>
             </div>
-            <a href="/cart"><i class="fas fa-shopping-cart"></i></a>
-        </nav>
+            <a href="/cart" class="cart-icon"></a>
+        </div>
     </header>
 
     <!-- Contact Container -->
@@ -249,23 +284,42 @@
         <!-- Form Section -->
         <div class="form-section">
             <h2>Send Us a Message</h2>
-            <form action="/send-message" method="POST">
-                <div class="form-group">
-                    <label for="name">Full Name:</label>
-                    <input type="text" id="name" name="name" required>
+
+            <!-- Display Success or Error Messages -->
+            <% if (successMsg) { %>
+                <div style="color: green; margin-bottom: 20px;">
+                    <%= successMsg %>
                 </div>
-                <div class="form-group">
-                    <label for="email">E-mail:</label>
-                    <input type="email" id="email" name="email" required>
+            <% } %>
+
+            <% if (errorMsg) { %>
+                <div style="color: red; margin-bottom: 20px;">
+                    <%= errorMsg %>
                 </div>
+            <% } %>
+
+            <!-- Contact Form -->
+            <form method="POST" action="/send-message">
                 <div class="form-group">
                     <label for="phone">Phone Number:</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+6399-9999-999" required>
+                    <div style="display: flex; align-items: center;">
+                        <select id="countryCode" class="country-code-select" onchange="updatePhoneNumber()">
+                            <option value="+63">+639 (Philippines)</option>
+                            <option value="+1">+1 (USA/Canada)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+61">+61 (Australia)</option>
+                            <option value="+91">+91 (India)</option>
+                            <option value="+81">+81 (Japan)</option>
+                        </select>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter phone number" value="<%= phone %>" required>
+                    </div>
                 </div>
+
                 <div class="form-group">
                     <label for="message">Message:</label>
-                    <textarea id="message" name="message" required></textarea>
+                    <textarea id="message" name="message" required><%= message %></textarea>
                 </div>
+
                 <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
             </form>
         </div>
@@ -285,7 +339,42 @@
         </div>
     </div>
 
+    <!-- Display Sent Messages -->
+<div class="sent-messages-container" style="margin-top: 40px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+    <h3>Your Sent Messages:</h3>
+    <% if (user) { %>
+        <% if (contactMessages.length > 0) { %>
+            <ul>
+                <% contactMessages.forEach(function(message) { %>
+                    <li style="margin-bottom: 20px; padding: 15px; background-color: #eaeaea; border-radius: 5px;">
+                        <div><strong>Phone:</strong> <%= message.phone_number %></div>
+                        <div><strong>Message:</strong> <%= message.message %></div>
+                        <div><small><strong>Sent on:</strong> <%= new Date(message.created_at).toLocaleString() %></small></div>
+                        
+                        <!-- Delete Button with Confirmation -->
+                        <form action="/contact/delete/<%= message.id %>" method="POST" style="display: inline;" onsubmit="return confirmDelete();">
+                            <button type="submit" class="delete-btn" style="color: red; background: none; border: none; cursor: pointer;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>                        
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>You haven't sent any messages yet.</p>
+        <% } %>
+    <% } %>
+</div>
+
+
     <script>
+        function updatePhoneNumber() {
+            const countryCode = document.getElementById('countryCode').value;
+            const phoneInput = document.getElementById('phone');
+            phoneInput.value = '';  // Clear phone number
+            phoneInput.placeholder = `Enter phone number with ${countryCode}`;
+        }
+
         function toggleDropdown(event) {
             event.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
@@ -305,11 +394,14 @@
         }
 
         function confirmLogout() {
-            if (confirm('Are you sure you want to logout?')) {
+            if (confirm('Are you sure you want to log out?')) {
                 window.location.href = '/logout';
             }
         }
-    </script>
 
+        function confirmDelete() {
+        return confirm("Are you sure you want to delete this message?");
+    }
+    </script>
 </body>
 </html>

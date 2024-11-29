@@ -319,11 +319,11 @@
                                 <img src="/uploads/<%= item.product_image.split('/').pop() %>" alt="<%= item.product_name %>">
                             </td>
                             <td><%= item.product_name %></td>
-                            <td>$<%= isNaN(parseFloat(item.price)) ? '0.00' : parseFloat(item.price).toFixed(2) %></td>
+                            <td>₱<%= isNaN(parseFloat(item.price)) ? '0.00' : parseFloat(item.price).toFixed(2) %></td>
                             <td>
                                 <input type="number" class="quantity-input" value="<%= item.quantity %>" onchange="updateQuantity('<%= item.id %>', this.value)">
                             </td>
-                            <td>$<%= ((isNaN(parseFloat(item.price)) ? 0 : parseFloat(item.price)) * item.quantity).toFixed(2) %></td>
+                            <td>₱<%= ((isNaN(parseFloat(item.price)) ? 0 : parseFloat(item.price)) * item.quantity).toFixed(2) %></td>
                             <td>
                                 <button class="remove-button" onclick="removeFromCart('<%= item.id %>')">
                                     <i class="fas fa-trash-alt"></i> Remove

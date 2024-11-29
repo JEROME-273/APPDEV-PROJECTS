@@ -225,8 +225,16 @@
         <ul>
           <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
           <li><a href="/admin/products"><i class="fas fa-box"></i> Products</a></li>
-          <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-          <li><a href="/admin/cancelled-orders"><i class="fas fa-ban"></i> Cancelled Orders</a></li>
+
+          <!-- Orders Dropdown -->
+          <li class="dropdown">
+            <a href="#" onclick="toggleDropdown(event)"><i class="fas fa-shopping-cart"></i> Orders <i class="fas fa-chevron-down"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/admin/orders"><i class="fas fa-box-open"></i> All Orders</a></li>
+              <li><a href="/admin/cancelled-orders"><i class="fas fa-ban"></i> Cancelled Orders</a></li>
+            </ul>
+          </li>
+
           <li><a href="/admin/order-history"><i class="fas fa-history"></i> Transaction History</a></li>
           <li><a href="/admin/messages"><i class="fas fa-comments"></i> Messages</a></li>
           <li><a href="/admin/accounts"><i class="fas fa-users"></i> Accounts</a></li>

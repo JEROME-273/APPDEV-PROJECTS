@@ -37,3 +37,15 @@ exports.updateProfilePic = async (userId, profilePic) => {
         throw error;
     }
 };
+exports.createContactMessage = async (userId, phone, message) => {
+    const query = 'INSERT INTO contacts (user_id, phone_number, message, created_at) VALUES (?, ?, ?, ?)';
+    const values = [userId, phone, message, new Date()];
+
+    try {
+        await pool.query(query, values);  // Use the correct pool connection here
+    } catch (error) {
+        console.error('Error inserting contact message:', error);
+        throw error;
+    }
+};
+
