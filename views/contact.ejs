@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriEcommerce - Contact Us</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logo img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .header .logo h1 {
+            font-size: 24px;
+            color: #2d7b3b;
+        }
+
+        .navbar {
+            display: flex;
+        }
+
+        .navbar a {
+            margin: 0 15px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a i {
+            margin-right: 5px;
+        }
+
+        .navbar a:hover,
+        .navbar a.active {
+            color: #2d7b3b;
+        }
+
+        .icons {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .search-bar input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: -5px;
+        }
+
+        .search-bar button {
+            background-color: #2d7b3b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #25612c;
+        }
+
+        .user-icon {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .user-icon img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        /* Cart Icon Container */
+.cart-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;  /* Sufficient space for icon and count bubble */
+    height: 40px;
+    cursor: pointer;
+    margin-left: 15px;  /* Spacing from other icons */
+    border-radius: 50%;  /* Circular background */
+    background-color: #f8f8f8;  /* Light background color */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+    box-sizing: border-box;  /* Ensures padding and border are included in width/height calculation */
+}
+
+/* Cart Icon */
+.cart-icon i {
+    font-size: 22px;  /* Adjusted size for balance */
+    color: #333;  /* Dark color for contrast */
+    line-height: 40px;  /* Ensures the icon is vertically centered */
+    display: inline-block;  /* Prevents scaling issues with inline-block */
+    width: 100%;  /* Ensures the icon fills the container */
+    height: 100%;
+    text-align: center;  /* Centers the icon inside the container */
+}
+
+/* Count Bubble */
+.cart-icon span {
+    position: absolute;
+    top: -4px;  /* Position the bubble above the icon */
+    right: -4px;  /* Position the bubble to the top-right */
+    background-color: #e74c3c;  /* Red color for the bubble */
+    color: white;  /* White text inside the bubble */
+    border-radius: 50%;  /* Make the bubble circular */
+    padding: 4px 8px;  /* Adjust padding for better size */
+    font-size: 14px;  /* Font size for count */
+    font-weight: bold;
+    min-width: 20px;  /* Ensure it fits 2-digit counts */
+    min-height: 20px;
+    text-align: center;
+    line-height: 20px;  /* Vertically center the number inside the bubble */
+    transition: background-color 0.3s ease;  /* Smooth color transition on hover */
+}
+
+/* Hover Effect for Count Bubble */
+.cart-icon span:hover {
+    background-color: #c0392b;  /* Slightly darker on hover */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);  /* Soft glow effect on hover */
+}
+
+/* Optional: Fix icon clarity on higher resolution screens */
+@media (min-width: 1200px) {
+    .cart-icon i {
+        font-size: 24px;  /* Increase icon size for high-resolution screens */
+    }
+
+    .cart-icon span {
+        font-size: 16px;  /* Adjust count bubble font size */
+    }
+}
+
+        .contact-container {
+            display: flex;
+            justify-content: space-around;
+            padding: 40px;
+            background-color: #fff;
+        }
+
+        .form-section, .info-section {
+            width: 45%;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f4f4f4;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h2, .info-section h2 {
+            color: #2d7b3b;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .submit-btn {
+            display: inline-block;
+            background-color: #2d7b3b;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #25612c;
+        }
+
+        .info-section p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .info-section i {
+            color: #2d7b3b;
+            margin-right: 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            margin-right: 10px;
+            color: #2d7b3b;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: #25612c;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 150px;
+            z-index: 1;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f4f4f4;
+        }
+
+        .country-code-select {
+            width: 80px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Center the success message */
+        .alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            font-weight: bold;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+            z-index: 9999;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo">
+            <img src="/images/agri_logo.jpeg" alt="AgriEcommerce Logo">
+            <h1>AgriEcommerce</h1>
+        </div>
+        <nav class="navbar">
+            <a href="/welcome"><i class="fas fa-home"></i>Home</a>
+            <a href="/shop"><i class="fas fa-shopping-cart"></i>Shop</a>
+            <a href="/aboutus"><i class="fas fa-info-circle"></i>About Us</a>
+            <a href="/contact"><i class="fas fa-envelope"></i>Contact</a>
+        </nav>
+        <div class="icons">
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-icon" onclick="toggleDropdown(event)">
+                <% if (user && user.profile_pic) { %>
+                    <img src="/uploads/<%= user.profile_pic %>" alt="User Profile">
+                <% } else { %>
+                    <img src="/images/default-profile.png" alt="Default Profile">
+                <% } %>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile">User Profile</a>
+                <a href="/change-password">Change Password</a>
+                <a href="#" onclick="confirmLogout()">Logout</a>
+            </div>
+            <a href="/cart" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count"><%= cartCount %></span> <!-- Dynamic cart count -->
+            </a>
+        </div>
+    </header>
+
+    <!-- Contact Container -->
+    <div class="contact-container">
+        
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Send Us a Message</h2>
+
+            <!-- Success Message -->
+<% if (successMsg) { %>
+    <div class="alert alert-success" id="successMsg"><%= successMsg %></div>
+<% } %>
+
+<!-- Error Message -->
+<% if (errorMsg) { %>
+    <div class="alert alert-danger"><%= errorMsg %></div>
+<% } %>
+
+<!-- Contact Form -->
+<form method="POST" action="/send-message">
+    <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <div style="display: flex; align-items: center;">
+            <select id="countryCode" class="country-code-select" onchange="updatePhoneNumber()">
+                <option value="+63">+639 (Philippines)</option>
+                <option value="+1">+1 (USA/Canada)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+61">+61 (Australia)</option>
+                <option value="+91">+91 (India)</option>
+                <option value="+81">+81 (Japan)</option>
+            </select>
+            <input type="tel" id="phone" name="phone" placeholder="Enter phone number" value="<%= phone %>" required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required><%= message %></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
+</form>
+
+        </div>
+
+        <!-- Information Section -->
+        <div class="info-section">
+            <h2>Contact Information</h2>
+            <p><i class="fas fa-map-marker-alt"></i>Masipit, Calapan City, Oriental Mindoro</p>
+            <p><i class="fas fa-envelope"></i> AgriEcommerce@gmail.com</p>
+            <p><i class="fas fa-phone"></i> 0912-4577-314</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-square"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePhoneNumber() {
+            const countryCode = document.getElementById('countryCode').value;
+            const phoneInput = document.getElementById('phone');
+            phoneInput.value = '';  // Clear phone number
+            phoneInput.placeholder = `Enter phone number with ${countryCode}`;
+        }
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-icon') && !event.target.closest('.dropdown-menu')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function confirmLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                window.location.href = '/logout';
+            }
+        }
+
+        // Fade out success message after 2 seconds
+        function fadeSuccessMessage() {
+            setTimeout(function() {
+                const successMsg = document.getElementById('successMsg');
+                if (successMsg) {
+                    successMsg.style.opacity = '0';
+                    setTimeout(function() {
+                        successMsg.style.display = 'none';
+                    }, 1000); // Hide message after fade
+                }
+            }, 2000);
+        }
+
+        window.onload = function() {
+            fadeSuccessMessage();
+        };
+    </script>
+</body>
+</html>

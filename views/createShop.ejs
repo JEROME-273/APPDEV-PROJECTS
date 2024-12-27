@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles/createShop.css">
+    <title>Create Shop - AgriEcommerce</title>
+</head>
+<body>
+    <!-- Header Section (Unchanged) -->
+    <header class="header">
+        <div class="logo">
+            <img src="/images/agri_logo.jpeg" alt="AgriEcommerce Logo">
+            <h1>AgriEcommerce</h1>
+        </div>
+        <nav class="navbar">
+            <a href="/welcome"><i class="fas fa-home"></i>Home</a>
+            <a href="/shop"><i class="fas fa-shopping-cart"></i>Shop</a>
+            <a href="/aboutus"><i class="fas fa-info-circle"></i>About Us</a>
+            <a href="/contact"><i class="fas fa-envelope"></i>Contact</a>
+        </nav>
+        <div class="icons">
+            <a href="/my-shop" class="my-shop-btn"><i class="fas fa-store"></i>My Shop</a>
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-icon" onclick="toggleDropdown(event)">
+                <% if (user && user.profile_pic) { %>
+                    <img src="/uploads/<%= user.profile_pic %>" alt="User Profile">
+                <% } else { %>
+                    <img src="/images/default-profile.png" alt="Default Profile">
+                <% } %>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile">User Profile</a>
+                <a href="/change-password">Change Password</a>
+                <a href="#" onclick="confirmLogout()">Logout</a>
+            </div>
+            <a href="/cart" class="cart-icon"></a>
+        </div>
+    </header>
+
+    <!-- Create Shop Form Section -->
+    <section class="create-shop-section">
+        <div class="form-container">
+            <h2>Create Your Shop</h2>
+            <form action="/create-shop" method="POST" enctype="multipart/form-data">
+                <!-- Shop Name -->
+                <div class="form-group">
+                    <label for="shopName">Shop Name</label>
+                    <input type="text" id="shopName" name="shopName" placeholder="Enter shop name" required>
+                </div>
+
+                <!-- Shop Profile Image -->
+                <div class="form-group">
+                    <label for="shopProfile">Shop Profile Image</label>
+                    <input type="file" id="shopProfile" name="shopProfile" accept="image/*" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="create-shop-btn">Create Shop</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <!-- Footer content -->
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function confirmLogout() {
+            const confirmation = confirm("Are you sure you want to log out?");
+            if (confirmation) {
+                window.location.href = '/logout'; 
+            }
+        }
+
+        window.onclick = function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            if (!event.target.matches('.user-icon') && !event.target.closest('.dropdown-menu')) {
+                dropdown.classList.remove('show');
+            }
+        };
+    </script>
+</body>
+</html>

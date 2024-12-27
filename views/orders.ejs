@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles/orders.css">
+    <title>My Shop - AgriEcommerce</title>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo">
+            <img src="/images/agri_logo.jpeg" alt="AgriEcommerce Logo">
+            <h1>AgriEcommerce</h1>
+        </div>
+        <nav class="navbar">
+            <a href="/welcome"><i class="fas fa-home"></i>Home</a>
+            <a href="/shop"><i class="fas fa-shopping-cart"></i>Shop</a>
+            <a href="/aboutus"><i class="fas fa-info-circle"></i>About Us</a>
+            <a href="/contact"><i class="fas fa-envelope"></i>Contact</a>
+        </nav>
+        <div class="icons">
+            <a href="/my-shop" class="my-shop-btn"><i class="fas fa-store"></i>My Shop</a>
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-icon" onclick="toggleDropdown(event)">
+                <% if (user && user.profile_pic) { %>
+                    <img src="/uploads/<%= user.profile_pic %>" alt="User Profile">
+                <% } else { %>
+                    <img src="/images/default-profile.png" alt="Default Profile">
+                <% } %>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile">User Profile</a>
+                <a href="/change-password">Change Password</a>
+                <a href="#" onclick="confirmLogout()">Logout</a>
+            </div>
+            <!-- Cart Icon with Count -->
+            <a href="/cart" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count"><%= cartCount %></span> <!-- Dynamic cart count -->
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="orders-section">
+            <h2>Orders</h2>
+
+            <% if (orders && orders.length > 0) { %>
+                <% orders.forEach(function(order) { %>
+                    <div class="order-item">
+                        <div class="order-header">
+                            <p>Order ID: <%= order.order_id %></p>
+                            <p>Customer: <%= order.fullname %></p> <!-- Display user fullname -->
+                            <p>Status: <%= order.status %></p>
+                            <p>Total: $<%= order.total_amount %></p>
+                            <p>Address: <%= order.address %></p>
+                            <p>Payment Method: <%= order.payment_method %></p>
+                        </div>
+
+                        <div class="order-products">
+                            <h4>Ordered Products:</h4>
+                            <% order.items.forEach(function(item) { %>
+                                <div class="product-item">
+                                    <img src="/uploads/<%= item.product_image %>" alt="<%= item.product_name %>" class="product-image">
+                                    <div>
+                                        <h5><%= item.product_name %></h5>
+                                        <p>Quantity: <%= item.quantity %></p>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                        <!-- Accept Order Button -->
+                        <form action="/accept-order/<%= order.order_id %>" method="POST">
+                            <button type="submit" class="accept-order-btn">Accept Order</button>
+                        </form>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>You have no orders yet.</p>
+            <% } %>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Toggle dropdown for user menu
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Confirm logout
+        function confirmLogout() {
+            const confirmation = confirm("Are you sure you want to log out?");
+            if (confirmation) {
+                window.location.href = '/logout'; 
+            }
+        }
+    </script>
+
+</body>
+</html>

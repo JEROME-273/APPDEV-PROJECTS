@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles/myShop.css">
+    <title>My Shop - AgriEcommerce</title>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo">
+            <img src="/images/agri_logo.jpeg" alt="AgriEcommerce Logo">
+            <h1>AgriEcommerce</h1>
+        </div>
+        <nav class="navbar">
+            <a href="/welcome"><i class="fas fa-home"></i>Home</a>
+            <a href="/shop"><i class="fas fa-shopping-cart"></i>Shop</a>
+            <a href="/aboutus"><i class="fas fa-info-circle"></i>About Us</a>
+            <a href="/contact"><i class="fas fa-envelope"></i>Contact</a>
+        </nav>
+        <div class="icons">
+            <!-- New 'My Shop' Button -->
+            <a href="/my-shop" class="my-shop-btn"><i class="fas fa-store"></i>My Shop</a>
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-icon" onclick="toggleDropdown(event)">
+                <% if (user && user.profile_pic) { %>
+                    <img src="/uploads/<%= user.profile_pic %>" alt="User Profile">
+                <% } else { %>
+                    <img src="/images/default-profile.png" alt="Default Profile">
+                <% } %>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile">User Profile</a>
+                <a href="/change-password">Change Password</a>
+                <a href="#" onclick="confirmLogout()">Logout</a>
+            </div>
+            <!-- Cart Icon with Count -->
+            <a href="/cart" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count"><%= cartCount %></span> <!-- Dynamic cart count -->
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h2>Welcome to <%= shop ? shop.shopName : "AgriEcommerce" %>!</h2>
+    </section>
+
+    <main>
+        <div class="shop-info">
+            <% if (!shop) { %>
+                <p><%= noShopMessage %></p>
+                <a href="/create-shop" class="create-shop-link">Yes, I want to create my own shop!</a>
+            <% } else { %>
+                <!-- Shop Icon Above Shop Name -->
+                <div class="shop-header">
+                    <i class="fas fa-store shop-icon"></i>
+                    <h3><%= shop.shopName %></h3>
+                </div>
+
+                <!-- Shop Profile Image Beside Shop Name -->
+                <div class="shop-profile">
+                    <% if (shop.shopProfile) { %>
+                        <img src="/uploads/<%= shop.shopProfile %>" alt="Shop Profile Image" class="shop-image">
+                    <% } else { %>
+                        <p>No shop profile image available.</p>
+                    <% } %>
+                </div>
+
+                <!-- Add Product Button -->
+                <a href="/add-product" class="add-product-btn">
+                    <i class="fas fa-plus"></i> Add Product
+                </a>
+
+                <!-- Orders Dropdown next to Add Product Button -->
+                <div class="orders-menu">
+                    <button class="orders-btn"><i class="fas fa-box"></i> Orders</button>
+                    <div class="orders-menu-content">
+                        <a href="/orders">Orders</a>
+                        <a href="/canceled-orders">Canceled Orders</a>
+                        <a href="/order-history"><i class="fas fa-history"></i>Order History</a>
+                    </div>
+                </div>
+
+                <!-- Aesthetic Separator Line -->
+                <div class="separator"></div>
+
+                <!-- Your Products Heading -->
+                <h3>Your Products:</h3>
+
+                <!-- Display Products -->
+                <% if (products && products.length > 0) { %>
+                    <div class="product-list">
+                        <% products.forEach(function(product) { %>
+                            <div class="product-item">
+                                <div class="product-header">
+                                    <!-- Three-Dot Menu for Edit/Delete -->
+                                    <div class="product-menu">
+                                        <i class="fas fa-ellipsis-v" onclick="toggleMenu(event, '<%= product.id %>')"></i>
+                                        <div class="product-menu-options" id="menu-<%= product.id %>">
+                                            <a href="/edit-product/<%= product.id %>" class="edit-btn">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <a href="#" class="delete-btn" onclick="deleteProduct('<%= product.id %>')">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img src="/uploads/<%= product.p_image %>" alt="<%= product.p_name %>" class="product-image">
+                                <h4><%= product.p_name %></h4>
+                                <p>Price:₱<%= product.p_price %></p>
+                                <p>Quantity: <%= product.p_quantity %></p>
+                                <p><%= product.p_description %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <p>No products available yet.</p>
+                <% } %>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="delete-modal">
+        <div class="modal-content">
+            <h3>Are you sure you want to delete this product?</h3>
+            <p>This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button id="confirmDeleteBtn" class="confirm-btn">Yes, Delete</button>
+                <button id="cancelDeleteBtn" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Toggle dropdown for user menu
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Confirm logout
+        function confirmLogout() {
+            const confirmation = confirm("Are you sure you want to log out?");
+            if (confirmation) {
+                window.location.href = '/logout'; 
+            }
+        }
+        
+        // Handle click outside of user dropdown
+        window.onclick = function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            if (!event.target.matches('.user-icon') && !event.target.closest('.dropdown-menu')) {
+                dropdown.classList.remove('show');
+            }
+        
+            // Close product menu if clicking outside
+            const menus = document.querySelectorAll('.product-menu-options');
+            menus.forEach(menu => {
+                if (!event.target.closest('.product-menu') && !event.target.closest('.product-menu-options')) {
+                    menu.classList.remove('show');
+                }
+            });
+        
+            // Close the modal if clicked outside
+            const modal = document.getElementById('deleteModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+        
+        // Global variable to store product ID for deletion
+        let productIdToDelete = null;
+
+        // Function to show the modal for confirming deletion
+        function deleteProduct(productId) {
+            productIdToDelete = productId; // Store the product ID to delete
+            document.getElementById('deleteModal').style.display = 'flex'; // Show the modal
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none'; // Hide the modal
+        }
+
+        // Event listener to handle confirm deletion button
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if (productIdToDelete) {
+                // Proceed with deletion (redirect to delete route)
+                window.location.href = `/delete-product/${productIdToDelete}`;
+            }
+            // Close the modal before redirecting
+            closeModal(); 
+        });
+
+        // Event listener to handle cancel button
+        document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+            closeModal(); // Close the modal
+        });
+
+        // Toggle the visibility of the edit/delete menu for a product
+        function toggleMenu(event, productId) {
+            event.stopPropagation();
+            const menu = document.getElementById(`menu-${productId}`);
+            menu.classList.toggle('show');
+        }
+
+        // Ensure the modal is hidden when the page loads (although this might not be necessary)
+        window.onload = function() {
+            const modal = document.getElementById('deleteModal');
+            modal.style.display = 'none'; // Hide modal by default when the page loads
+        };
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* General Reset and Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f1f3f6;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: #2e3b4e;
+      color: #fff;
+      padding-top: 20px;
+      z-index: 100;
+    }
+
+    .sidebar .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .sidebar .logo img {
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 20px 0;
+    }
+
+    .sidebar nav ul li a {
+      display: block;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .sidebar nav ul li a:hover {
+      background-color: #3f4d63;
+    }
+
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      background-color: #fff;
+      flex: 1;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile i {
+      font-size: 40px;
+      color: #333;
+      margin-right: 10px;
+      margin-left: 950px;
+    }
+
+    .logout-btn {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #dc3545;
+      color: white;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .logout-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* Enhanced Message Section */
+    .message-list {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #2e3b4e;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 900px;
+    }
+
+    .message-list li {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .message-list li:hover {
+      transform: scale(1.02);
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #ecf0f1;
+      transition: background-color 0.3s ease;
+    }
+
+    .message-header:hover {
+      background-color: #dddfe1;
+    }
+
+    .message-header img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .username {
+      font-weight: bold;
+      color: #333;
+      margin-right: 10px;
+      flex-grow: 1;
+    }
+
+    .message-icon {
+      font-size: 20px;
+      color: #2c3e50;
+      margin-left: auto;
+    }
+
+    .message-body {
+      margin-top: 10px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      max-width: 80%;
+      margin: 10px 0;
+      font-size: 14px;
+      display: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-body p {
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .user-message {
+      max-width: 70%;
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background-color: #b0c4de;
+      color: #2c3e50;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+      margin-left: 50px;
+      transition: background-color 0.3s ease;
+    }
+
+    .user-message:hover {
+      background-color: #aab7c4;
+    }
+
+    .message-header:hover {
+      background-color: #34495e;
+      color: #fff;
+    }
+
+    .message-body p:hover {
+      color: #34495e;
+    }
+
+    .no-messages {
+      text-align: center;
+      font-size: 18px;
+      color: #7f8c8d;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="/images/agri_logo.jpeg" alt="Logo">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="/admin/messages"><i class="fas fa-comments"></i> Messages</a></li>
+          <li><a href="/admin/accounts"><i class="fas fa-users"></i> Accounts</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header>
+        <div class="profile">
+          <i class="fas fa-user-circle"></i>
+          <button class="logout-btn" onclick="confirmLogout()">Logout</button>
+        </div>
+      </header>
+
+      <h1>Messages</h1>
+      <!-- Messages Section -->
+      <div class="message-list">
+        <% if (userMessages && userMessages.length > 0) { %>
+          <% userMessages.sort((a, b) => {
+            const latestMessageA = a.messages[a.messages.length - 1].created_at;
+            const latestMessageB = b.messages[b.messages.length - 1].created_at;
+            return new Date(latestMessageB) - new Date(latestMessageA);
+          }); %>
+          
+          <% userMessages.forEach(msg => { %>
+            <div class="user-message-container" id="user-<%= msg.id %>">
+              <div class="message-header" onclick="toggleMessages('<%= msg.id %>')">
+                <div class="user-icon">
+                  <% if (msg.profile_pic) { %>
+                    <img src="/uploads/<%= msg.profile_pic %>" alt="<%= msg.fullname %>" class="user-profile-pic">
+                  <% } else { %>
+                    <img src="/images/default-profile.png" alt="Default Profile" class="user-profile-pic">
+                  <% } %>
+                </div>
+                <span class="username"><%= msg.fullname %></span>
+                <i class="fas fa-comment message-icon"></i> 
+              </div>
+              <div class="message-body" id="message-body-<%= msg.id %>" style="display: none;">
+                <% msg.messages.forEach(message => { %>
+                  <div class="user-message">
+                    <p><%= message.message %></p>
+                    <p class="message-time">
+                      <%= new Date(message.created_at).toLocaleString() %>
+                    </p>
+                  </div>
+                <% }) %>
+              </div>
+            </div>            
+          <% }) %>
+        <% } else { %>
+          <p class="no-messages">No messages available.</p>
+        <% } %>        
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function confirmLogout() {
+      if (confirm("Are you sure you want to log out?")) {
+        window.location.href = '/login'; 
+      }
+    }
+
+    function toggleDropdown(event) {
+      event.preventDefault();
+      const parentLi = event.target.closest('li');
+      parentLi.classList.toggle('open');
+    }
+
+    function toggleMessages(messageId) {
+      const messageBody = document.getElementById(`message-body-${messageId}`);
+      if (messageBody) {
+        messageBody.style.display = messageBody.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+  </script>
+</body>
+</html>

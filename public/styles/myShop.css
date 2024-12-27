@@ -1,0 +1,644 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f5f5f5; /* Light gray background for the body */
+}
+
+/* Header (unchanged as per request) */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo img {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.header .logo h1 {
+    font-size: 24px;
+    color: #2d7b3b;
+}
+
+.navbar {
+    display: flex;
+}
+
+.navbar a {
+    margin: 0 15px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.navbar a i {
+    margin-right: 5px;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    color: #2d7b3b;
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.search-bar input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 1px;
+    font-size: 14px;
+    background-color: #fff;
+    width: 200px;
+}
+
+.search-bar button {
+    background-color: #2d7b3b;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #25612c;
+}
+
+.user-icon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-icon img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+/* Cart Icon Container */
+.cart-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;  /* Sufficient space for icon and count bubble */
+    height: 40px;
+    cursor: pointer;
+    margin-left: 15px;  /* Spacing from other icons */
+    border-radius: 50%;  /* Circular background */
+    background-color: #f8f8f8;  /* Light background color */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+    box-sizing: border-box;  /* Ensures padding and border are included in width/height calculation */
+}
+
+/* Cart Icon */
+.cart-icon i {
+    font-size: 22px;  /* Adjusted size for balance */
+    color: #333;  /* Dark color for contrast */
+    line-height: 40px;  /* Ensures the icon is vertically centered */
+    display: inline-block;  /* Prevents scaling issues with inline-block */
+    width: 100%;  /* Ensures the icon fills the container */
+    height: 100%;
+    text-align: center;  /* Centers the icon inside the container */
+}
+
+/* Count Bubble */
+.cart-icon span {
+    position: absolute;
+    top: -4px;  /* Position the bubble above the icon */
+    right: -4px;  /* Position the bubble to the top-right */
+    background-color: #e74c3c;  /* Red color for the bubble */
+    color: white;  /* White text inside the bubble */
+    border-radius: 50%;  /* Make the bubble circular */
+    padding: 4px 8px;  /* Adjust padding for better size */
+    font-size: 14px;  /* Font size for count */
+    font-weight: bold;
+    min-width: 20px;  /* Ensure it fits 2-digit counts */
+    min-height: 20px;
+    text-align: center;
+    line-height: 20px;  /* Vertically center the number inside the bubble */
+    transition: background-color 0.3s ease;  /* Smooth color transition on hover */
+}
+
+/* Hover Effect for Count Bubble */
+.cart-icon span:hover {
+    background-color: #c0392b;  /* Slightly darker on hover */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);  /* Soft glow effect on hover */
+}
+
+/* Optional: Fix icon clarity on higher resolution screens */
+@media (min-width: 1200px) {
+    .cart-icon i {
+        font-size: 24px;  /* Increase icon size for high-resolution screens */
+    }
+
+    .cart-icon span {
+        font-size: 16px;  /* Adjust count bubble font size */
+    }
+}
+
+/* New 'My Shop' Button Style */
+.my-shop-btn {
+    background-color: #2d7b3b;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.my-shop-btn i {
+    margin-right: 10px;
+}
+
+.my-shop-btn:hover {
+    background-color: #25612c;
+}
+
+.hero {
+    width: 100%;
+    height: 400px;
+    background: url('/images/vegetable.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    margin-bottom: 20px;
+}
+
+
+/* Shop Info Section */
+.shop-info {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e1f5d5, #f5f5f5); /* Gradient background */
+    border: 1px solid #ccc;
+}
+
+.shop-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.shop-icon {
+    font-size: 40px;
+    margin-right: 15px;
+    color: #2d7b3b;
+}
+
+
+.shop-profile {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    justify-content: space-between;  /* Aligns profile image and details */
+}
+
+.shop-image {
+    max-width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 4px solid #2d7b3b;  /* Border around the image */
+}
+
+.shop-details {
+    flex-grow: 1;
+    font-size: 18px;
+    color: #333;
+}
+
+.create-shop-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 18px;
+    background-color: #25612c;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.create-shop-link:hover {
+    background-color: #2d7b3b;
+}
+
+/* New Add Product Button */
+/* Add Product Button */
+.add-product-btn {
+    background-color: #25612c;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 28px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-product-btn:hover {
+    background-color: #2d7b3b;
+}
+
+/* Aesthetic Separator Line */
+.separator {
+    content: "";
+    display: block;
+    margin: 30px 0; /* Adds space above and below the line */
+    border-bottom: 2px solid #25612c; /* Green line color */
+    width: 100%; /* Ensures the line spans the width of the section */
+}
+
+/* Your Products Heading */
+.shop-info h3 {
+    font-size: 32px;
+    margin-top: 20px; /* Space above the "Your Products" text */
+    color: #25612c;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Dropdown Menu Styles */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 150px;
+    z-index: 1;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f4f4f4;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-evenly;
+    margin-top: 50px;
+}
+
+/* Product Item Style */
+.product-item {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 260px;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect */
+.product-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Product Image */
+.product-item .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Product Title */
+.product-item h4 {
+    font-size: 20px;
+    color: #2d7b3b;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+/* Product Description */
+.product-item p {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.product-item p strong {
+    font-weight: bold;
+}
+
+/* Green Accent for Product Description */
+.product-item p:last-child {
+    font-size: 17px;
+    color: #25612c;
+    font-weight: bold;
+}
+
+/* No Products Message */
+.product-list .no-products-message {
+    font-size: 18px;
+    color: #888;
+    text-align: center;
+    width: 100%;
+}
+
+/* Product Menu (3-dot button) */
+.product-menu {
+    position: absolute;  /* Position the 3-dot button within the product item */
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* 3-dot menu options */
+.product-menu i {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.product-menu-options {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    width: 120px; /* Set a fixed width for the menu */
+    border-radius: 6px; /* Optional: Add rounded corners */
+}
+
+.product-menu-options.show {
+    display: block;
+}
+
+.product-menu-options a {
+    display: flex;  /* Use flexbox to align text and icons */
+    align-items: center;  /* Vertically center the text and icon */
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    border-radius: 4px; /* Optional: Add rounded corners */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.product-menu-options a:hover {
+    background-color: #f1f1f1;  /* Light hover background */
+}
+
+/* Edit button */
+.edit-btn {
+    color: #007bff;  /* Blue color for Edit */
+}
+
+.edit-btn i {
+    margin-right: 8px; /* Space between icon and text */
+}
+
+/* Delete button */
+.delete-btn {
+    color: #dc3545;  /* Red color for Delete */
+}
+
+.delete-btn i {
+    margin-right: 8px;  /* Space between icon and text */
+}
+
+/* Edit button hover */
+.edit-btn:hover {
+    background-color: #e7f1ff; /* Light blue on hover */
+    color: #0056b3;  /* Darker blue on hover */
+}
+
+/* Delete button hover */
+.delete-btn:hover {
+    background-color: #f8d7da;  /* Light red on hover */
+    color: #721c24;  /* Darker red on hover */
+}
+
+
+/* Modal styles */
+.delete-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed to the viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Background overlay */
+    z-index: 9999; /* Make sure it's on top */
+    
+    /* Center the modal content both vertically and horizontally */
+    justify-content: center;
+    align-items: center;
+    display: flex; /* Center the content using flexbox */
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-btn {
+    background-color: #dc3545; /* Red for confirm delete */
+    color: white;
+}
+
+.confirm-btn:hover {
+    background-color: #c82333;
+}
+
+.cancel-btn {
+    background-color: #6c757d; /* Gray for cancel */
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Orders Dropdown */
+.orders-menu {
+    position: relative;
+    display: inline-block;
+    margin-left: 20px; /* Adjust spacing as needed */
+}
+
+.orders-btn {
+    background-color: #007BFF; /* Changed to a more vibrant blue */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px; /* Rounded corners for the button */
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+.orders-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.orders-btn:active {
+    background-color: #004085; /* Even darker blue on click */
+    transform: translateY(2px); /* Slight pressed effect */
+}
+
+.orders-menu-content {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 200px; /* Increased width for better readability */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    z-index: 1;
+    top: 45px; /* Position dropdown below the button */
+    right: 0; /* Align dropdown to the right */
+    padding: 10px 0;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in */
+}
+
+.orders-menu-content a {
+    color: #333; /* Darker text color */
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #f1f1f1; /* Thin separator line */
+    transition: background-color 0.3s ease, padding-left 0.3s ease; /* Smooth transitions */
+    border-radius: 8px; /* Slightly rounded corners for items */
+}
+
+.orders-menu-content a:last-child {
+    border-bottom: none; /* Remove border from the last item */
+}
+
+.orders-menu-content a:hover {
+    background-color: #f0f8ff; /* Light blue background on hover */
+    padding-left: 25px; /* Smooth left padding transition */
+}
+
+.orders-menu:hover .orders-menu-content {
+    display: block;
+    opacity: 1;
+}
+
+.orders-menu:hover .orders-btn {
+    background-color: #0056b3; /* Change button color when hovered */
+}
+
+/* Optional: Adding a small arrow to the button for better UX */
+.orders-btn::after {
+    content: '\f0d7'; /* Font Awesome down-arrow */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-left: 10px;
+    transition: transform 0.3s ease; /* Smooth rotate transition */
+}
+
+.orders-menu:hover .orders-btn::after {
+    transform: rotate(180deg); /* Arrow rotates when menu is open */
+}
+

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Accounts</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background-color: #f4f7fc;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: #2e3b4e;
+      color: #fff;
+      padding-top: 20px;
+      z-index: 100;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1); /* Added shadow to make sidebar pop */
+    }
+
+    .sidebar .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar .logo img {
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar nav ul li a {
+      display: block;
+      padding: 12px 20px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar nav ul li a:hover {
+      background-color: #3f4d63;
+      border-radius: 5px; /* Added rounded corners on hover */
+    }
+
+    .sidebar nav ul li .dropdown-menu {
+      display: none;
+      list-style: none;
+      padding-left: 20px;
+    }
+
+    .sidebar nav ul li.open .dropdown-menu {
+      display: block;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 250px;
+      padding: 40px;
+      background-color: #f4f7fc;
+      color: #333;
+      flex: 1;
+      transition: margin-left 0.3s ease;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile i {
+      font-size: 40px;
+      color: #333;
+      margin-left: 900px;
+    }
+
+    .logout-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #dc3545;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 15px;
+    }
+
+    .logout-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* Accounts Section */
+    .accounts-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: space-around;
+      margin-top: 40px;
+    }
+
+    .account-card {
+      background-color: #fff;
+      border-radius: 12px;
+      width: 250px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      border: 1px solid #eee; /* Light border for the cards */
+    }
+
+    .account-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .account-card img {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+
+    .account-card h4 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .account-card p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .account-card .email {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .account-card .status {
+      margin-top: 15px;
+      padding: 5px 10px;
+      background-color: #e7e7e7;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2e3b4e;
+      color: white;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="/images/agri_logo.jpeg" alt="Logo">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="/admin/messages"><i class="fas fa-comments"></i> Messages</a></li>
+          <li><a href="/admin/accounts"><i class="fas fa-users"></i> Accounts</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header>
+        <div class="profile">
+          <i class="fas fa-user-circle"></i>
+          <button class="logout-btn" onclick="confirmLogout()">Logout</button>
+        </div>
+      </header>
+
+      <h1>User Accounts</h1>
+      <!-- Accounts Section -->
+      <div class="accounts-container">
+        <% if (users && users.length > 0) { %>
+          <% users.forEach(user => { %>
+            <div class="account-card">
+              <% if (user.profile_pic) { %>
+                <img src="/uploads/<%= user.profile_pic %>" alt="<%= user.fullname %>">
+              <% } else { %>
+                <img src="/images/default-profile.png" alt="<%= user.fullname %>">
+              <% } %>
+              <h4><%= user.fullname %></h4>
+              <p class="email"><%= user.email %></p>
+              <div class="status"><%= user.status || 'Active' %></div> <!-- Dynamic status -->
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p>No accounts available.</p>
+        <% } %>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function confirmLogout() {
+      if (confirm("Are you sure you want to log out?")) {
+        window.location.href = '/login'; 
+      }
+    }
+
+    function toggleDropdown(event) {
+      event.preventDefault();
+      const parentLi = event.target.closest('li');
+      parentLi.classList.toggle('open');
+    }
+  </script>
+
+  <footer>
+    <p>&copy; 2024 AgriEcommerce. All rights reserved.</p>
+  </footer>
+</body>
+</html>
